@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import logo from "../assets/code.png"
 import ParticlesBackground from "../components/ParticlesBackground";
 
@@ -19,13 +19,7 @@ const Authpage = () => {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem("teacherAuth", "true");
-    localStorage.setItem(
-      "teacherData",
-      JSON.stringify({ name: "Demo Teacher", email: loginData.email })
-    );
-    alert("Login Successful");
-    navigate("/teacher/dashboard");
+    navigate("/dashboard/home")
   };
 
   const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +48,7 @@ const Authpage = () => {
               alt="CodEdit Logo"
               className="w-16 h-16 object-contain"
             />
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-blue-600 tracking-tight animate-fade-in">
               CodEdit
             </h1>
           </div>
@@ -144,7 +138,7 @@ const Authpage = () => {
           )}
           <button
             type="submit"
-            className="w-full py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all font-semibold"
+            className="w-full cursor-pointer py-2 bg-indigo-600 text-white rounded-3xl hover:bg-indigo-700 transition-all font-semibold"
           >
             {activeTab === "login" ? "Sign In" : "Create Account"}
           </button>
