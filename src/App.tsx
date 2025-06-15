@@ -10,6 +10,7 @@ import PostChallenge from './components/dashboard/PostChallenge'
 import Challenges from './components/dashboard/Challenges'
 import ChallengeDetail from './components/dashboard/ChallengeDetail'
 import StudentChallenge from './pages/StudentChallenge'
+import Submissions from './components/dashboard/Submissions'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path='post-challenge' element={<PostChallenge />} />
           <Route path='my-challenges' element={<Challenges />} />
           <Route path='my-challenges/:id' element={<ChallengeDetail />} />
+          <Route path="submissions/:challengeId" element={<Submissions />} />
         </Route>
           <Route path='/challenge/:id' element={<StudentChallenge />} />
         <Route path='*' element={<Notfound />} />

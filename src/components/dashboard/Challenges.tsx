@@ -149,7 +149,7 @@ const Challenges = () => {
                       </div>
                     </div>
                     
-                    <Link to={`/teacher/submissions/${challenge.id}`}>
+                    <Link to={`/dashboard/submissions/${challenge.id}`}>
                       <Button variant="outline" size="sm">
                         <Users className="h-4 w-4 mr-1" />
                         View Submissions

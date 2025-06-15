@@ -89,7 +89,7 @@ const ChallengeDetail = () => {
               <Copy className="h-4 w-4 mr-2" />
               Copy Share Link
             </Button>
-            <Link to={`/teacher/submissions/${challenge.id}`}>
+            <Link to={`/dashboard/submissions/${challenge.id}`}>
               <Button className="rounded-3xl gradient-bg">
                 <Users className="h-4 w-4 mr-2" />
                 View Submissions
