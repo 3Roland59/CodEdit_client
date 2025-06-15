@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Users, Calendar, Copy, Info } from "lucide-react";
 import { toast } from "sonner";
+import empty from "../../assets/empty.png"
 
 interface Challenge {
   id: string;
@@ -55,6 +56,11 @@ const Challenges = () => {
           </div>
 
           <Card className="text-center py-12">
+            <img
+              src={empty}
+              alt="empty"
+              className="w-48 h-48 object-contain mx-auto"
+            />
             <CardContent>
               <div className="space-y-4">
                 <h3 className="text-lg font-medium text-gray-900">No challenges yet</h3>
@@ -62,7 +68,7 @@ const Challenges = () => {
                   Create your first coding challenge to get started
                 </p>
                 <Link to="/teacher/post-challenge">
-                  <Button className="gradient-bg">
+                  <Button className="rounded-3xl gradient-bg">
                     Create Your First Challenge
                   </Button>
                 </Link>
@@ -83,7 +89,7 @@ const Challenges = () => {
             </p>
           </div>
           <Link to="/teacher/post-challenge">
-            <Button className="gradient-bg">
+            <Button className="gradient-bg rounded-3xl">
               Create New Challenge
             </Button>
           </Link>
@@ -91,7 +97,7 @@ const Challenges = () => {
 
         <div className="grid gap-6">
           {challenges.map((challenge) => (
-            <Card key={challenge.id} className="hover:shadow-lg transition-shadow">
+            <Card key={challenge.id} className="hover:bg-blue-100 transition-all">
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -102,6 +108,7 @@ const Challenges = () => {
                   </div>
                   <div className="flex gap-2 ml-4">
                     <Button
+                    className="cursor-pointer"
                       variant="outline"
                       size="sm"
                       onClick={() => copyShareLink(challenge.id)}

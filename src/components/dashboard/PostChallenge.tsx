@@ -172,7 +172,7 @@ const isValidTestCase = (tc: TestCase) => {
 
   };
 
-  if (!showShareLink) {
+  if (showShareLink) {
     return (
         <div className="max-w-2xl mx-auto p-2 sm:p-0">
           <Card>
@@ -195,10 +195,10 @@ const isValidTestCase = (tc: TestCase) => {
                 </Button>
               </div>
               <div className="flex gap-4 items-center justify-center">
-                <Button className="rounded-3xl" onClick={() => setShowShareLink("")} variant="outline">
+                <Button className="cursor-pointer rounded-3xl" onClick={() => setShowShareLink("")} variant="outline">
                   Add Challenge
                 </Button>
-                <Button className="rounded-3xl" onClick={() => navigate("/dashboard/my-challenges")}>
+                <Button className="cursor-pointer rounded-3xl" onClick={() => navigate("/dashboard/my-challenges")}>
                   View All Challenges
                 </Button>
               </div>    
@@ -236,6 +236,9 @@ const isValidTestCase = (tc: TestCase) => {
 
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
+                <CardDescription className="text-green-600">
+                *Challenge should be in the form of a function that has a return value
+              </CardDescription>
                 <Textarea
                   id="description"
                   placeholder="Provide a detailed description of the problem..."
