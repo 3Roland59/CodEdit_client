@@ -34,12 +34,12 @@ const PostChallenge = () => {
   });
 
   const [testCases, setTestCases] = useState<TestCase[]>([
-    { id: "1", inputType: "string", inputValue: "", outputType: "string", outputValue: "" }
+    { id: "1", inputType: "", inputValue: "", outputType: "", outputValue: "" }
   ]);
 
   const [showShareLink, setShowShareLink] = useState("");
 
-  const languages = ["Python", "JavaScript", "TypeScript"];
+  const languages = ["python", "javascript", "typescript"];
   const dataTypes = ["string", "integer", "boolean", "array",];
 
   const addTestCase = () => {
@@ -164,7 +164,7 @@ const isValidTestCase = (tc: TestCase) => {
 
   const copyShareLink = () => {
     navigator.clipboard.writeText(showShareLink);
-    toast("Link copied", {
+    toast.info("Link copied", {
   description: <p className="text-gray-700">Challenge URL has been copied to your clipboard.</p>,
   icon: <Info className="text-blue-500" />,
   duration: 3000,
@@ -351,7 +351,7 @@ const isValidTestCase = (tc: TestCase) => {
                       <div className="space-y-2">
                         <Label>Input Types</Label>
                         <Input
-                            placeholder='e.g., string,boolean'
+                            placeholder='e.g., string,array'
                             value={testCase.inputType}
                             onChange={(e) => updateTestCase(testCase.id, "inputType", e.target.value)}
                         />
@@ -361,7 +361,7 @@ const isValidTestCase = (tc: TestCase) => {
                         </div>
                     
                     <div className="space-y-2">
-                      <Label>Input Value</Label>
+                      <Label>Input Values</Label>
                       <Input
                         placeholder="e.g., hello,[2, 7, 11, 15]"
                         value={testCase.inputValue}
@@ -372,20 +372,20 @@ const isValidTestCase = (tc: TestCase) => {
                     <div className="space-y-2">
   <Label>Output Types</Label>
   <Input
-    placeholder='e.g., string'
+    placeholder='e.g., boolean,integer'
     value={testCase.outputType}
     onChange={(e) => updateTestCase(testCase.id, "outputType", e.target.value)}
   />
   <p className="text-sm text-muted-foreground">
-    Use comma-separated values (e.g., <code>string</code>)
+    Use comma-separated values (e.g., <code>string,boolean</code>)
   </p>
 </div>
 
                     
                     <div className="space-y-2">
-                      <Label>Expected Output</Label>
+                      <Label>Output Values</Label>
                       <Input
-                        placeholder="e.g., [0, 1]"
+                        placeholder="e.g., false,8"
                         value={testCase.outputValue}
                         onChange={(e) => updateTestCase(testCase.id, "outputValue", e.target.value)}
                       />
@@ -400,6 +400,24 @@ const isValidTestCase = (tc: TestCase) => {
               </Button>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Security</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="challengeKey">Challenge key</Label>
+                <Input
+                  id="challengeKey"
+                  placeholder="Enter your key required to open challenge"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  required
+                />
+              </div>
+              </CardContent>
+              </Card>
 
           <div className="flex justify-end">
             <Button type="submit" className="gradient-bg rounded-3xl">

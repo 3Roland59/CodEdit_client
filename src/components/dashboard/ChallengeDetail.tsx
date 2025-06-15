@@ -34,7 +34,7 @@ const ChallengeDetail = () => {
   const copyShareLink = () => {
     const shareLink = `${window.location.origin}/challenge/${id}`;
     navigator.clipboard.writeText(shareLink);
-    toast("Link copied", {
+    toast.info("Link copied", {
   description: <p className="text-gray-700">Challenge URL has been copied to your clipboard.</p>,
   icon: <Info className="text-blue-500" />,
   duration: 3000,
@@ -184,7 +184,7 @@ const ChallengeDetail = () => {
             <CardHeader>
               <CardTitle>Share Challenge</CardTitle>
               <CardDescription>
-                Share this link with your students to give them access to the challenge
+                Share this link together with its challenge key with your students to give them access to the challenge
               </CardDescription>
             </CardHeader>
             <CardContent>

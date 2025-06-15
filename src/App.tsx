@@ -9,6 +9,7 @@ import { Toaster } from './components/ui/sonner'
 import PostChallenge from './components/dashboard/PostChallenge'
 import Challenges from './components/dashboard/Challenges'
 import ChallengeDetail from './components/dashboard/ChallengeDetail'
+import StudentChallenge from './pages/StudentChallenge'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path='my-challenges' element={<Challenges />} />
           <Route path='my-challenges/:id' element={<ChallengeDetail />} />
         </Route>
+          <Route path='/challenge/:id' element={<StudentChallenge />} />
         <Route path='*' element={<Notfound />} />
       </Routes>
     </>

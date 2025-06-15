@@ -2,6 +2,12 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import logo from "../assets/code.png"
 import ParticlesBackground from "../components/ParticlesBackground";
+import {
+  Mail,
+  Lock,
+  User,
+  LockKeyhole,
+} from "lucide-react";
 
 const Authpage = () => {
   const [searchParams] = useSearchParams();
@@ -81,60 +87,68 @@ const Authpage = () => {
           className="space-y-4"
         >
           {activeTab === "signup" && (
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Full Name</label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-                placeholder="John Doe"
-                value={signupData.name}
-                onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
-                required
-              />
-            </div>
+            <div className="relative">
+  <label className="block text-sm text-gray-600 mb-1">Full Name</label>
+  <User className="absolute left-3 top-1/2 transform text-gray-400 w-5 h-5" />
+  <input
+    type="text"
+    className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+    placeholder="John Doe"
+    value={signupData.name}
+    onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
+    required
+  />
+</div>
+
           )}
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Email</label>
-            <input
-              type="email"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              placeholder="teacher@school.edu"
-              value={activeTab === "login" ? loginData.email : signupData.email}
-              onChange={(e) =>
-                activeTab === "login"
-                  ? setLoginData({ ...loginData, email: e.target.value })
-                  : setSignupData({ ...signupData, email: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Password</label>
-            <input
-              type="password"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              value={activeTab === "login" ? loginData.password : signupData.password}
-              onChange={(e) =>
-                activeTab === "login"
-                  ? setLoginData({ ...loginData, password: e.target.value })
-                  : setSignupData({ ...signupData, password: e.target.value })
-              }
-              required
-            />
-          </div>
+          <div className="relative">
+  <label className="block text-sm text-gray-600 mb-1">Email</label>
+  <Mail className="absolute left-3 top-1/2 transform text-gray-400 w-5 h-5" />
+  <input
+    type="email"
+    className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+    placeholder="teacher@school.edu"
+    value={activeTab === "login" ? loginData.email : signupData.email}
+    onChange={(e) =>
+      activeTab === "login"
+        ? setLoginData({ ...loginData, email: e.target.value })
+        : setSignupData({ ...signupData, email: e.target.value })
+    }
+    required
+  />
+</div>
+
+          <div className="relative">
+  <label className="block text-sm text-gray-600 mb-1">Password</label>
+  <Lock className="absolute left-3 top-1/2 transform text-gray-400 w-5 h-5" />
+  <input
+    type="password"
+    className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+    value={activeTab === "login" ? loginData.password : signupData.password}
+    onChange={(e) =>
+      activeTab === "login"
+        ? setLoginData({ ...loginData, password: e.target.value })
+        : setSignupData({ ...signupData, password: e.target.value })
+    }
+    required
+  />
+</div>
+
           {activeTab === "signup" && (
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-                value={signupData.confirmPassword}
-                onChange={(e) =>
-                  setSignupData({ ...signupData, confirmPassword: e.target.value })
-                }
-                required
-              />
-            </div>
+            <div className="relative">
+  <label className="block text-sm text-gray-600 mb-1">Confirm Password</label>
+  <LockKeyhole className="absolute left-3 top-1/2 transform text-gray-400 w-5 h-5" />
+  <input
+    type="password"
+    className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+    value={signupData.confirmPassword}
+    onChange={(e) =>
+      setSignupData({ ...signupData, confirmPassword: e.target.value })
+    }
+    required
+  />
+</div>
+
           )}
           <button
             type="submit"

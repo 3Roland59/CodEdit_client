@@ -44,14 +44,14 @@ function Homepage() {
 
           <div className="flex flex-row justify-center items-center gap-4 px-4">
   <Link to={"/auth?tab=signup"} aria-label="Start using CodEdit as a teacher" className="w-full sm:w-auto">
-    <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-3xl border border-blue-600 font-semibold flex items-center justify-center gap-2 transition hover:bg-blue-700">
+    <button className="w-full sm:w-auto cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-3xl border border-blue-600 font-semibold flex items-center justify-center gap-2 transition hover:bg-blue-700">
       Get Started
       <Sparkles size={16} />
     </button>
   </Link>
 
   <Link to={"/auth?tab=login"} aria-label="Login to CodEdit" className="w-full sm:w-auto">
-    <button className="w-full sm:w-auto group flex items-center justify-center px-4 py-2 rounded-3xl border border-gray-400 font-semibold text-gray-700 transition hover:border-blue-500 hover:text-blue-600">
+    <button className="w-full cursor-pointer sm:w-auto group flex items-center justify-center px-4 py-2 rounded-3xl border border-gray-400 font-semibold text-gray-700 transition hover:border-blue-500 hover:text-blue-600">
       Log In
       <ArrowRight
         className="ml-2 h-4 w-4 text-blue-600 transition-transform group-hover:translate-x-1"
