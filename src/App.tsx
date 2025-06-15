@@ -8,6 +8,7 @@ import Home from './components/dashboard/Home'
 import { Toaster } from './components/ui/sonner'
 import PostChallenge from './components/dashboard/PostChallenge'
 import Challenges from './components/dashboard/Challenges'
+import ChallengeDetail from './components/dashboard/ChallengeDetail'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route path='home' element={<Home />} />
           <Route path='post-challenge' element={<PostChallenge />} />
           <Route path='my-challenges' element={<Challenges />} />
+          <Route path='my-challenges/:id' element={<ChallengeDetail />} />
         </Route>
         <Route path='*' element={<Notfound />} />
       </Routes>

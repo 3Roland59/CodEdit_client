@@ -67,8 +67,8 @@ const Challenges = () => {
                 <p className="text-gray-600">
                   Create your first coding challenge to get started
                 </p>
-                <Link to="/teacher/post-challenge">
-                  <Button className="rounded-3xl gradient-bg">
+                <Link to="/dashboard/post-challenge">
+                  <Button className="rounded-3xl gradient-bg cursor-pointer">
                     Create Your First Challenge
                   </Button>
                 </Link>
@@ -88,8 +88,8 @@ const Challenges = () => {
               {challenges.length} challenge{challenges.length !== 1 ? 's' : ''} created
             </p>
           </div>
-          <Link to="/teacher/post-challenge">
-            <Button className="gradient-bg rounded-3xl">
+          <Link to="/dashboard/post-challenge">
+            <Button className="gradient-bg rounded-3xl cursor-pointer">
               Create New Challenge
             </Button>
           </Link>
@@ -115,7 +115,7 @@ const Challenges = () => {
                     >
                       <Copy className="h-4 w-4" />
                     </Button>
-                    <Link to={`/teacher/challenge/${challenge.id}`}>
+                    <Link to={`/dashboard/my-challenges/${challenge.id}`}>
                       <Button variant="outline" size="sm">
                         <Eye className="h-4 w-4" />
                       </Button>
