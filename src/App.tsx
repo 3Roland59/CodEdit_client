@@ -11,6 +11,7 @@ import Challenges from './components/dashboard/Challenges'
 import ChallengeDetail from './components/dashboard/ChallengeDetail'
 import StudentChallenge from './pages/StudentChallenge'
 import Submissions from './components/dashboard/Submissions'
+import ResultLookup from './pages/ResultLookup'
 
 function App() {
 
@@ -27,7 +28,8 @@ function App() {
           <Route path='my-challenges/:id' element={<ChallengeDetail />} />
           <Route path="submissions/:challengeId" element={<Submissions />} />
         </Route>
-          <Route path='/challenge/:id' element={<StudentChallenge />} />
+        <Route path='/challenge/:id' element={<StudentChallenge />} />
+        <Route path="/results" element={<ResultLookup />} />
         <Route path='*' element={<Notfound />} />
       </Routes>
     </>

@@ -196,7 +196,7 @@ const StudentChallenge = () => {
   return (
     <>
       <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
-        <DialogContent showCloseButton={!false} onInteractOutside={(e) => e.preventDefault()}
+        <DialogContent showCloseButton={false} onInteractOutside={(e) => e.preventDefault()}
   onEscapeKeyDown={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>Student Authentication</DialogTitle>

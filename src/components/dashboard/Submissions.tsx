@@ -189,7 +189,7 @@ const Submissions = () => {
                         <Badge variant="outline">{submission.language}</Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={submission.status === "passed" ? "default" : "destructive"}>
+                        <Badge className={submission.status === "passed" ? "bg-blue-600" : ""} variant={submission.status === "passed" ? "default" : "destructive"}>
                           {submission.status}
                         </Badge>
                       </TableCell>
@@ -241,7 +241,7 @@ const Submissions = () => {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-gray-700">Status</div>
-                    <Badge variant={selectedSubmission.status === "passed" ? "default" : "destructive"}>
+                    <Badge className={selectedSubmission.status === "passed" ? "bg-blue-600" : ""}  variant={selectedSubmission.status === "passed" ? "default" : "destructive"}>
                       {selectedSubmission.status}
                     </Badge>
                   </div>
@@ -269,8 +269,8 @@ const Submissions = () => {
                       <div key={index} className="border rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium">Test Case {index + 1}</span>
-                          <Badge variant={test.passed ? "default" : "destructive"}>
-                            {test.passed ? "PASS" : "FAIL"}
+                          <Badge className={test.passed ? "bg-blue-600" : ""}  variant={test.passed ? "default" : "destructive"}>
+                            {test.passed ? "Passed" : "Failed"}
                           </Badge>
                         </div>
                         <div className="space-y-1 text-sm">
