@@ -14,6 +14,8 @@ import {
 import logo from "../assets/code.png";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 
 const navItems = [
   { name: "Dashboard", to: "/dashboard/home", icon: Home },
@@ -23,19 +25,26 @@ const navItems = [
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useUser()
+  const [confirmLogoutOpen, setConfirmLogoutOpen] = useState(false);
+
+const confirmLogout = () => setConfirmLogoutOpen(true);
+const cancelLogout = () => setConfirmLogoutOpen(false);
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("teacherAuth");
-    localStorage.removeItem("teacherData");
-    toast.success("Logout successful", {
-  // description: <p className="text-gray-700">Your students can now access the challenge.</p>,
-  icon: <CheckCircle className="text-green-500" />,
-  duration: 4000,
-});
-    navigate("/");
-  };
+  logout()
+    setConfirmLogoutOpen(false);
+
+  toast.success("Logout successful", {
+    icon: <CheckCircle className="text-green-500" />,
+    duration: 4000,
+  });
+
+  navigate("/");
+};
+
 
   return (
     <div className="h-screen flex overflow-hidden">
@@ -123,7 +132,7 @@ export default function DashboardLayout() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Button onClick={handleLogout} className="rounded-3xl cursor-pointer px-4" variant="outline" size="sm">
+        <Button onClick={confirmLogout} className="rounded-3xl cursor-pointer px-4" variant="outline" size="sm">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
@@ -147,6 +156,16 @@ export default function DashboardLayout() {
       </div>
       <Outlet />
     </main>
+    <ConfirmDialog
+  isOpen={confirmLogoutOpen}
+  title="Confirm Logout"
+  description="Are you sure you want to logout? This action cannot be undone."
+  onClose={cancelLogout}
+  onConfirm={() => {
+    handleLogout();
+  }}
+/>
+
   </div>
 </div>
 

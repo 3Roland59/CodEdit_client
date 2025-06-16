@@ -12,11 +12,13 @@ import ChallengeDetail from './components/dashboard/ChallengeDetail'
 import StudentChallenge from './pages/StudentChallenge'
 import Submissions from './components/dashboard/Submissions'
 import ResultLookup from './pages/ResultLookup'
+import { UserProvider } from './context/UserContext'
 
 function App() {
 
   return (
     <>
+    <UserProvider>
         <Toaster />
       <Routes>
         <Route path='/' element={<Homepage />} />
@@ -32,6 +34,7 @@ function App() {
         <Route path="/results" element={<ResultLookup />} />
         <Route path='*' element={<Notfound />} />
       </Routes>
+      </UserProvider>
     </>
   )
 }
