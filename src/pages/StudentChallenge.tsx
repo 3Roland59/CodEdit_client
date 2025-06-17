@@ -127,7 +127,6 @@ const {data: challenges, isLoading} = useChallenges()
   try {
     const res = await axios.post(`${BASE_URL}/api/v1/submissions`, submission);
     
-    // Optional: check response
     if (res.status === 201 || res.status === 200) {
       toast.success("Code Submitted!", {
         description: <p className="text-gray-700">Your solution has been submitted successfully</p>,
@@ -138,10 +137,10 @@ const {data: challenges, isLoading} = useChallenges()
     } else {
       throw new Error("Unexpected response status");
     }
-  } catch (error) {
+  } catch (error:any) {
     console.error("Submission failed", error);
     toast.error("Submission Failed", {
-      description: <p className="text-gray-700">Something went wrong. Please try again.</p>,
+      description: <p className="text-gray-700">{error?.response?.data?.error || "Something went wrong. Please try again."}</p>,
       icon: <XCircle className="text-red-500" />,
       duration: 3000,
     });

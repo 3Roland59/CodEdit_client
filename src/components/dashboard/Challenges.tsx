@@ -83,65 +83,67 @@ const Challenges = () => {
         {challenges?.map((challenge) => (
           <Card key={challenge.id}>
             <CardHeader>
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-xl mb-2">{challenge.title}</CardTitle>
-                  <CardDescription className="line-clamp-2">
-                    {challenge.description}
-                  </CardDescription>
-                </div>
-                <div className="flex gap-2 ml-4">
-                  <Button
-                    className="cursor-pointer"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyShareLink(challenge.id)}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                  <Link to={`/dashboard/my-challenges/${challenge.id}`}>
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardHeader>
+  <div className="flex flex-col sm:flex-row justify-between gap-4">
+    <div className="flex-1">
+      <CardTitle className="text-xl mb-2">{challenge.title}</CardTitle>
+      <CardDescription className="line-clamp-2">{challenge.description}</CardDescription>
+    </div>
+    <div className="flex gap-2 self-start sm:self-auto ">
+      <Button
+        className="cursor-pointer"
+        variant="outline"
+        size="sm"
+        onClick={() => copyShareLink(challenge.id)}
+      >
+        <Copy className="h-4 w-4" />
+      </Button>
+      <Link to={`/dashboard/my-challenges/${challenge.id}`}>
+        <Button variant="outline" size="sm">
+          <Eye className="h-4 w-4" />
+        </Button>
+      </Link>
+    </div>
+  </div>
+</CardHeader>
+
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {challenge.languages.split(",").map((language) => (
-                    <Badge key={language} variant="secondary">
-                      {language}
-                    </Badge>
-                  ))}
-                </div>
+  <div className="space-y-4">
+    <div className="flex flex-wrap gap-2">
+      {challenge.languages.split(",").map((language) => (
+        <Badge key={language} variant="secondary">
+          {language.trim()}
+        </Badge>
+      ))}
+    </div>
 
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>Created {formatDate(challenge.createdAt)}</span>
-                    </div>
-                    {challenge.time !=0 && (
-                      <div className="flex items-center gap-1">
-                        <span>⏱️ {challenge.time} min</span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-1">
-                      <span>📝 {challenge.testCases.length} test cases</span>
-                    </div>
-                  </div>
+    <div className="flex flex-col sm:flex-row justify-between gap-4 text-sm text-gray-600">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-1">
+          <Calendar className="h-4 w-4" />
+          <span>Created {formatDate(challenge.createdAt)}</span>
+        </div>
+        {challenge.time !== 0 && (
+          <div className="flex items-center gap-1">
+            <span>⏱️ {challenge.time} min</span>
+          </div>
+        )}
+        <div className="flex items-center gap-1">
+          <span>📝 {challenge.testCases.length} test cases</span>
+        </div>
+      </div>
 
-                  <Link to={`/dashboard/submissions/${challenge.id}`}>
-                    <Button variant="outline" size="sm">
-                      <Users className="h-4 w-4 mr-1" />
-                      View Submissions
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
+      <div>
+        <Link to={`/dashboard/submissions/${challenge.id}`}>
+          <Button variant="outline" size="sm" className="w-full sm:w-auto">
+            <Users className="h-4 w-4 mr-1" />
+            View Submissions
+          </Button>
+        </Link>
+      </div>
+    </div>
+  </div>
+</CardContent>
+
           </Card>
         ))}
       </div>
