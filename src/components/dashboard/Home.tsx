@@ -8,51 +8,117 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
-
-const data = [
-  { name: "Math", submissions: 45, deadline: 3 },
-  { name: "Science", submissions: 30, deadline: 1 },
-  { name: "English", submissions: 55, deadline: 2 },
-];
+import { differenceInDays } from "date-fns";
 
 export default function DashboardHome() {
-  const {user} = useUser()
+  const { user } = useUser();
   const { data: challenges } = useChallenges();
-  const {data: submissions} = useAllSubmissions();
+  const { data: submissions } = useAllSubmissions();
 
-  const activeChallenges = ()=>{
-    const found = challenges?.filter(i=> new Date(i.deadline) > new Date())
-    return found?.length || 0
-  }
+  const activeChallenges = () => {
+    const found = challenges?.filter(
+      (i) => new Date(i.deadline) > new Date()
+    );
+    return found?.length || 0;
+  };
+
+  // Dynamic Chart Data
+  const chartData =
+    challenges?.map((challenge) => {
+      const submissionCount = submissions?.filter(
+        (sub) => sub.challengeId === challenge.id
+      ).length || 0;
+
+      const daysLeft = Math.max(
+        0,
+        differenceInDays(new Date(challenge.deadline), new Date())
+      );
+
+      return {
+        name: challenge.title,
+        submissions: submissionCount,
+        deadline: daysLeft,
+      };
+    }) || [];
+
+    const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
+
+const languageData = Object.entries(
+  submissions?.reduce((acc: Record<string, number>, curr) => {
+    acc[curr.language] = (acc[curr.language] || 0) + 1;
+    return acc;
+  }, {}) || {}
+).map(([language, count]) => ({ name: language, value: count }));
+
+const averageScoreData =
+  challenges?.map((challenge) => {
+    const relatedSubmissions = submissions?.filter(
+      (s) => s.challengeId === challenge.id
+    ) || [];
+
+    const avgScore =
+      relatedSubmissions.length > 0
+        ? relatedSubmissions.reduce((sum, s) => sum + s.score, 0) /
+          relatedSubmissions.length
+        : 0;
+
+    return {
+      name: challenge.title,
+      avgScore: parseFloat(avgScore.toFixed(2)),
+    };
+  }) || [];
+
+  const calculatePerformanceRate = () => {
+  if (!submissions || submissions.length === 0) return "0%";
+
+  let passed = 0;
+  let total = 0;
+
+  submissions.forEach((submission) => {
+    const results = submission.testCaseResult || [];
+    results.forEach((result) => {
+      total += 1;
+      if (result.passed) passed += 1;
+    });
+  });
+
+  const rate = total === 0 ? 0 : (passed / total) * 100;
+  return `${rate.toFixed(1)}%`;
+};
+
 
   return (
     <div className="p-4 md:p-6 space-y-6">
       {/* Welcome Section */}
       <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.username}
-          </h1>
-          <p className="text-gray-600">
-            Manage your coding challenges and track student progress
-          </p>
-        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Welcome back, {user?.username}
+        </h1>
+        <p className="text-gray-600">
+          Manage your coding challenges and track student progress
+        </p>
+      </div>
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total Challenges" value={challenges?.length || 0} />
         <StatCard title="Active Challenges" value={activeChallenges()} />
         <StatCard title="Total Submissions" value={submissions?.length || 0} />
-        <StatCard title="Performance Rate" value="+3%" />
+        <StatCard title="Performance Rate" value={calculatePerformanceRate()} />
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChartCard title="Submissions per Challenge">
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={data}>
+            <BarChart data={chartData}>
               <XAxis dataKey="name" />
-              <YAxis />
+              <YAxis allowDecimals={false} />
               <Tooltip />
               <Bar
                 dataKey="submissions"
@@ -65,9 +131,9 @@ export default function DashboardHome() {
 
         <ChartCard title="Deadlines in Days">
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={data}>
+            <BarChart data={chartData}>
               <XAxis dataKey="name" />
-              <YAxis />
+              <YAxis allowDecimals={false} />
               <Tooltip />
               <Bar
                 dataKey="deadline"
@@ -77,12 +143,48 @@ export default function DashboardHome() {
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
+
+  <ChartCard title="Submissions by Language">
+    <ResponsiveContainer width="100%" height={250}>
+      <PieChart>
+        <Pie
+          data={languageData}
+          dataKey="value"
+          nameKey="name"
+          outerRadius={80}
+          fill="#8884d8"
+          label
+        >
+          {languageData.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </Pie>
+        <Legend />
+        <Tooltip />
+      </PieChart>
+    </ResponsiveContainer>
+  </ChartCard>
+
+  <ChartCard title="Average Score per Challenge">
+    <ResponsiveContainer width="100%" height={250}>
+      <BarChart data={averageScoreData}>
+        <XAxis dataKey="name" />
+        <YAxis domain={[0, 100]} />
+        <Tooltip />
+        <Bar dataKey="avgScore" fill="#10b981" radius={[4, 4, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  </ChartCard>
+
       </div>
     </div>
   );
 }
 
-function StatCard({ title, value }: { title: string; value: number|string }) {
+function StatCard({ title, value }: { title: string; value: number | string }) {
   return (
     <div className="relative mb-2 sm:mb-0 bg-white rounded-2xl p-4 pt-6 border border-gray-200 overflow-visible">
       <div className="absolute -top-5 left-5 text-3xl md:text-4xl font-bold text-indigo-600">
