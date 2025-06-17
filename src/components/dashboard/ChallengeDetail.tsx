@@ -4,29 +4,40 @@ import { useParams, Link } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Users, Calendar, Clock, Info } from "lucide-react";
+import { Copy, Users, Calendar, Clock, Info, Loader2, EditIcon } from "lucide-react";
 import { toast } from "sonner";
 import nf from "../../assets/notfound.png"
+import { useChallenges } from "@/hooks/useChallenges";
+
+interface TestCase {
+  id: string;
+  inputDataType: string;
+  inputValue: string;
+  outputDataType: string;
+  outputValue: string;
+}
 
 interface Challenge {
   id: string;
+  userId: string;
   title: string;
   description: string;
-  languages: string[];
-  timeLimit: string;
-  hasTimeLimit: boolean;
+  time: number;
+  languages: string;
+  challengeKey: string;
   createdAt: string;
-  testCases: any[];
+  deadline: string;
+  testCases: TestCase[];
 }
 
 const ChallengeDetail = () => {
   const { id } = useParams();
-  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [challenge, setChallenge] = useState<Challenge | null>()
+  const {data: challenges, isLoading} = useChallenges()
 
   useEffect(() => {
     if (id) {
-      const challenges = JSON.parse(localStorage.getItem("challenges") || "[]");
-      const foundChallenge = challenges.find((c: Challenge) => c.id === id);
+      const foundChallenge = challenges?.find((c: Challenge) => c.id === id);
       setChallenge(foundChallenge);
     }
   }, [id]);
@@ -50,6 +61,14 @@ const ChallengeDetail = () => {
       minute: '2-digit'
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="animate-spin text-gray-600 h-8 w-8" />
+      </div>
+    );
+  }
 
   if (!challenge) {
     return (
@@ -116,7 +135,7 @@ const ChallengeDetail = () => {
                 <div>
                   <h3 className="font-medium mb-2">Supported Languages</h3>
                   <div className="flex flex-wrap gap-2">
-                    {challenge.languages.map((language) => (
+                    {challenge.languages.split(",").map((language) => (
                       <Badge key={language} variant="secondary">
                         {language}
                       </Badge>
@@ -131,13 +150,14 @@ const ChallengeDetail = () => {
                       <Calendar className="h-4 w-4" />
                       <span>Created {formatDate(challenge.createdAt)}</span>
                     </div>
-                    {challenge.hasTimeLimit && (
+                    {challenge.time != 0 && (
                       <div className="flex items-center gap-2">
                         <Clock className="h-4 w-4" />
-                        <span>Time limit: {challenge.timeLimit} minutes</span>
+                        <span>Time limit: {challenge.time} minutes</span>
                       </div>
                     )}
-                    <div>
+                    <div className="flex items-center gap-2">
+                      <EditIcon className="h-4 w-4" />
                       <span>Test cases: {challenge.testCases.length}</span>
                     </div>
                   </div>
@@ -163,13 +183,13 @@ const ChallengeDetail = () => {
                       <div>
                         <div className="text-sm font-medium text-gray-700 mb-1">Input</div>
                         <div className="bg-gray-50 p-2 rounded text-sm">
-                          <span className="text-gray-500">({testCase.inputType})</span> {testCase.inputValue}
+                          <span className="text-gray-500">({testCase.inputDataType.replace(";", ", ")})</span> {testCase.inputValue.replace(";", ", ")}
                         </div>
                       </div>
                       <div>
                         <div className="text-sm font-medium text-gray-700 mb-1">Expected Output</div>
                         <div className="bg-gray-50 p-2 rounded text-sm">
-                          <span className="text-gray-500">({testCase.outputType})</span> {testCase.outputValue}
+                          <span className="text-gray-500">({testCase.outputDataType.replace(";", ", ")})</span> {testCase.outputValue.replace(";", ", ")}
                         </div>
                       </div>
                     </div>
