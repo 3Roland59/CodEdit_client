@@ -7,29 +7,43 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Code, Clock, Lightbulb, Send, CheckCircle, XCircle, Info } from "lucide-react";
+import { Code, Clock, Lightbulb, Send, CheckCircle, XCircle, Info, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Lottie from "lottie-react";
 import animationData from "../assets/success.json"
 import nf from "../assets/empty.png"
 import logo from "../assets/code.png"
 import Editor from "@monaco-editor/react";
+import { useChallenges } from "@/hooks/useChallenges";
+import { BASE_URL } from "@/config/config";
+import axios from "axios";
 
+
+interface TestCase {
+  id: string;
+  inputDataType: string;
+  inputValue: string;
+  outputDataType: string;
+  outputValue: string;
+}
 
 interface Challenge {
   id: string;
+  userId: string;
   title: string;
   description: string;
-  languages: string[];
-  timeLimit: string;
-  hasTimeLimit: boolean;
-  testCases: any[];
+  time: number;
+  languages: string;
+  challengeKey: string;
+  createdAt: string;
+  deadline: string;
+  testCases: TestCase[];
 }
 
 const StudentChallenge = () => {
   const { id } = useParams();
   
-  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [challenge, setChallenge] = useState<Challenge | null>();
   const [showAuthModal, setShowAuthModal] = useState(true);
   const [studentData, setStudentData] = useState({
     name: "",
@@ -40,21 +54,21 @@ const StudentChallenge = () => {
   const [code, setCode] = useState("");
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [challengeKey, setChallengeKey] = useState('')
+  const [loading, setLoading] = useState(false)
+const {data: challenges, isLoading} = useChallenges()
 
   useEffect(() => {
     if (id) {
-      const challenges = JSON.parse(localStorage.getItem("challenges") || "[]");
-      const foundChallenge = challenges.find((c: Challenge) => c.id === id);
-      if (foundChallenge) {
-        setChallenge(foundChallenge);
-      }
+      const foundChallenge = challenges?.find((c: Challenge) => c.id === id);
+      setChallenge(foundChallenge);
     }
-  }, [id]);
+  }, [id, isLoading]);
 
   useEffect(() => {
-    if (challenge?.hasTimeLimit && timeLeft === null && !showAuthModal) {
-      const minutes = parseInt(challenge.timeLimit);
-      setTimeLeft(minutes * 60); // Convert to seconds
+    if (Number(challenge?.time) > 0 && timeLeft === null && !showAuthModal) {
+      const minutes = challenge?.time || 0;
+      setTimeLeft(minutes * 60);
     }
   }, [challenge, showAuthModal, timeLeft]);
 
@@ -74,7 +88,15 @@ const StudentChallenge = () => {
     if (!studentData.name || !studentData.studentId || !studentData.privateKey) {
       toast.error("Error", {
   description: <p className="text-gray-700">Please fill in all required fields</p>,
-  icon: <XCircle className="text-blue-500" />,
+  icon: <XCircle className="text-red-500" />,
+  duration: 3000,
+});
+      return;
+    }
+     if (challenge?.challengeKey && challenge.challengeKey != challengeKey) {
+      toast.error("Error", {
+  description: <p className="text-gray-700">Incorrect challenge key</p>,
+  icon: <XCircle className="text-red-500" />,
   duration: 3000,
 });
       return;
@@ -82,41 +104,52 @@ const StudentChallenge = () => {
     setShowAuthModal(false);
   };
 
-  const handleSubmit = () => {
-    if (!code.trim()) {
-      toast.error("Error", {
-  description: <p className="text-gray-700">Please write some code before submitting</p>,
-  icon: <XCircle className="text-blue-500" />,
-  duration: 3000,
-});
-      return;
-    }
+  const handleSubmit = async () => {
+  if (!code.trim()) {
+    toast.error("Error", {
+      description: <p className="text-gray-700">Please write some code before submitting</p>,
+      icon: <XCircle className="text-red-500" />,
+      duration: 3000,
+    });
+    return;
+  }
+  setLoading(true)
 
-    const submission = {
-      id: Date.now().toString(),
-      challengeId: id,
-      studentName: studentData.name,
-      studentId: studentData.studentId,
-      privateKey: studentData.privateKey,
-      language: selectedLanguage,
-      code: code,
-      submittedAt: new Date().toISOString(),
-      status: Math.random() > 0.5 ? "passed" : "failed", // Mock result
-      score: Math.floor(Math.random() * 100) + 1
-    };
-
-    // Save submission
-    const submissions = JSON.parse(localStorage.getItem("submissions") || "[]");
-    submissions.push(submission);
-    localStorage.setItem("submissions", JSON.stringify(submissions));
-
-    setIsSubmitted(true);
-    toast.success("Code Submitted!", {
-  description: <p className="text-gray-700">Your solution has been submitted successfully</p>,
-  icon: <CheckCircle className="text-blue-500" />,
-  duration: 3000,
-});
+  const submission = {
+    challengeId: id,
+    studentName: studentData.name,
+    studentId: studentData.studentId,
+    submissionKey: studentData.privateKey,
+    language: selectedLanguage,
+    code: code,
   };
+
+  try {
+    const res = await axios.post(`${BASE_URL}/api/v1/submissions`, submission);
+    
+    // Optional: check response
+    if (res.status === 201 || res.status === 200) {
+      toast.success("Code Submitted!", {
+        description: <p className="text-gray-700">Your solution has been submitted successfully</p>,
+        icon: <CheckCircle className="text-green-500" />,
+        duration: 3000,
+      });
+      setIsSubmitted(true);
+    } else {
+      throw new Error("Unexpected response status");
+    }
+  } catch (error) {
+    console.error("Submission failed", error);
+    toast.error("Submission Failed", {
+      description: <p className="text-gray-700">Something went wrong. Please try again.</p>,
+      icon: <XCircle className="text-red-500" />,
+      duration: 3000,
+    });
+  }finally{
+    setLoading(false)
+  }
+};
+
 
   const getHint = () => {
     // Mock AI hint generation
@@ -141,6 +174,14 @@ const StudentChallenge = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
+
+  if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="animate-spin text-gray-600 h-8 w-8" />
+        </div>
+      );
+    }
 
   if (!challenge) {
     return (
@@ -225,17 +266,17 @@ const StudentChallenge = () => {
                 required
               />
             </div>
-            <div className="space-y-2">
+            {challenge?.challengeKey && <div className="space-y-2">
               <Label htmlFor="challengeKey">Challenge Key</Label>
               <Input
                 id="challengeKey"
                 type="text"
                 placeholder="Enter the challenge key provided by your teacher"
-                value={studentData.privateKey}
-                onChange={(e) => setStudentData({...studentData, privateKey: e.target.value})}
+                value={challengeKey}
+                onChange={(e) => setChallengeKey(e.target.value)}
                 required
               />
-            </div>
+            </div>}
             <div className="space-y-2">
               <Label htmlFor="privateKey">Private Key</Label>
               <Input
@@ -262,7 +303,27 @@ const StudentChallenge = () => {
             <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
             <span className="text-blue-600 font-bold text-2xl">CodEdit</span>
           </div>
-            <div className="flex items-center gap-4">
+            <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+    <SelectTrigger className="w-48 rounded-3xl">
+      <SelectValue placeholder="Choose language" />
+    </SelectTrigger>
+    <SelectContent>
+      {challenge.languages.split(",").map((lang) => (
+        <SelectItem key={lang} value={lang}>
+          {lang}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+          </div>
+        </header>
+
+        <div className="mx-auto">
+          <div className="grid lg:grid-cols-2">
+            {/* Challenge Details */}
+            <Card className="m-4">
+  <CardHeader>
+    <div className="flex items-center gap-4">
               {timeLeft !== null && (
                 <div className="flex items-center gap-2 text-red-600">
                   <Clock className="h-4 w-4" />
@@ -273,22 +334,14 @@ const StudentChallenge = () => {
                 {studentData.name} ({studentData.studentId})
               </div>
             </div>
-          </div>
-        </header>
-
-        <div className="mx-auto">
-          <div className="grid lg:grid-cols-2">
-            {/* Challenge Details */}
-            <Card className="m-4">
-  <CardHeader>
     <CardTitle className="flex items-center gap-2">
       <Code className="h-5 w-5" />
       {challenge.title}
     </CardTitle>
-    {challenge.hasTimeLimit && (
+    {challenge.time > 0 && (
       <div className="flex items-center gap-2 text-sm text-gray-600">
         <Clock className="h-4 w-4" />
-        Time Limit: {challenge.timeLimit} minutes
+        Time Limit: {challenge.time} minutes
       </div>
     )}
   </CardHeader>
@@ -305,10 +358,10 @@ const StudentChallenge = () => {
       <div>
         <h3 className="font-medium mb-2">Available Languages</h3>
         <div className="flex flex-wrap gap-2">
-          {challenge.languages.map((lang) => (
+          {challenge.languages.split(",").map((lang) => (
             <span
               key={lang}
-              className="px-2 py-1 bg-blue-100 text-blue-800 rounded-3xl text-sm"
+              className="px-3 py-1 bg-blue-100 text-blue-800 rounded-3xl text-xs"
             >
               {lang}
             </span>
@@ -328,18 +381,18 @@ const StudentChallenge = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="font-medium text-gray-700">
-                Input <span className="text-gray-500 text-sm">({tc.inputType})</span>
+                Input <span className="text-gray-500 text-sm">({tc.inputDataType.replace(";", ", ")})</span>
               </p>
               <code className="bg-white px-2 py-1 rounded block mt-1">
-                {tc.inputValue}
+                {tc.inputValue.replace(";", ", ")}
               </code>
             </div>
             <div>
               <p className="font-medium text-gray-700">
-                Expected Output <span className="text-gray-500 text-sm">({tc.outputType})</span>
+                Expected Output <span className="text-gray-500 text-sm">({tc.outputDataType.replace(";", ", ")})</span>
               </p>
               <code className="bg-white px-2 py-1 rounded block mt-1">
-                {tc.outputValue}
+                {tc.outputValue.replace(";", ", ")}
               </code>
             </div>
           </div>
@@ -377,20 +430,6 @@ const StudentChallenge = () => {
     />
   </div>
 </div>
-<div className="absolute top-24 right-4 z-10 rounded-3xl bg-white">
-  <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-    <SelectTrigger className="w-48 rounded-3xl">
-      <SelectValue placeholder="Choose language" />
-    </SelectTrigger>
-    <SelectContent>
-      {challenge.languages.map((lang) => (
-        <SelectItem key={lang} value={lang}>
-          {lang}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-</div>
 
 
 {/* Floating Submit Button */}
@@ -398,10 +437,19 @@ const StudentChallenge = () => {
   <Button
     onClick={handleSubmit}
     className="gradient-bg shadow-lg"
-    disabled={!selectedLanguage || !code.trim()}
+    disabled={!selectedLanguage || !code.trim() || loading}
   >
-    <Send className="h-4 w-4 mr-2" />
+    {loading ? (
+    <>
+      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+      Submitting...
+    </>
+  ) : (
+    <>
+    <Send className="h-4 w-4" />
     Submit Solution
+    </>
+  )}
   </Button>
 </div>
 

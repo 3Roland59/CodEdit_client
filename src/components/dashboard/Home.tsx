@@ -1,4 +1,5 @@
 import { useUser } from "@/context/UserContext";
+import { useAllSubmissions } from "@/hooks/useAllSubmissions";
 import { useChallenges } from "@/hooks/useChallenges";
 import {
   BarChart,
@@ -18,6 +19,7 @@ const data = [
 export default function DashboardHome() {
   const {user} = useUser()
   const { data: challenges } = useChallenges();
+  const {data: submissions} = useAllSubmissions();
 
   const activeChallenges = ()=>{
     const found = challenges?.filter(i=> new Date(i.deadline) > new Date())
@@ -40,7 +42,7 @@ export default function DashboardHome() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total Challenges" value={challenges?.length || 0} />
         <StatCard title="Active Challenges" value={activeChallenges()} />
-        <StatCard title="Total Submissions" value={24} />
+        <StatCard title="Total Submissions" value={submissions?.length || 0} />
         <StatCard title="Performance Rate" value="+3%" />
       </div>
 
