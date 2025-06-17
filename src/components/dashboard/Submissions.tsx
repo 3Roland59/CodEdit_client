@@ -67,16 +67,16 @@ const Submissions = () => {
     setShowModal(true);
   };
 
-  const copyResultLink = (submission: Submission) => {
-    // In a real app, this would generate a secure link
-    const resultLink = `${window.location.origin}/results?studentId=${submission.studentId}&key=${submission.id}`;
-    navigator.clipboard.writeText(resultLink);
-    toast.info("Result Link Copied", {
-  description: <p className="text-gray-700">Share this link with the student to view their results</p>,
-  icon: <Info className="text-blue-500" />,
-  duration: 3000,
-});
-  };
+//   const copyResultLink = (submission: Submission) => {
+//     // In a real app, this would generate a secure link
+//     const resultLink = `${window.location.origin}/results?studentId=${submission.studentId}&key=${submission.id}`;
+//     navigator.clipboard.writeText(resultLink);
+//     toast.info("Result Link Copied", {
+//   description: <p className="text-gray-700">Share this link with the student to view their results</p>,
+//   icon: <Info className="text-blue-500" />,
+//   duration: 3000,
+// });
+//   };
 
 
   const getStats = () => {
@@ -113,16 +113,30 @@ const Submissions = () => {
     );
   }
 
+  const copyShareLink = () => {
+    const shareLink = `${window.location.origin}/results?challenge=${challengeId}`;
+    navigator.clipboard.writeText(shareLink);
+    toast.info("Link copied", {
+  description: <p className="text-gray-700">Challenge URL has been copied to your clipboard.</p>,
+  icon: <Info className="text-blue-500" />,
+  duration: 3000,
+});
+  };
+
   return (
       <div className="max-w-6xl mx-auto p-2 sm:p-0">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-14">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Submissions for "{challenge.title}"
           </h1>
           <p className="text-gray-600">
             Track and analyze student submissions
           </p>
+          <Button onClick={copyShareLink} className="rounded-3xl float-right" variant="outline">
+                        <Copy className="h-4 w-4 mr-2" />
+                        Copy Share Link
+                      </Button>
         </div>
 
         {/* Stats Cards */}
@@ -229,13 +243,13 @@ const Submissions = () => {
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button
+                          {/* <Button
                             variant="outline"
                             size="sm"
                             onClick={() => copyResultLink(submission)}
                           >
                             <Copy className="h-4 w-4" />
-                          </Button>
+                          </Button> */}
                         </div>
                       </TableCell>
                     </TableRow>

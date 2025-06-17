@@ -1,62 +1,117 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Search, CheckCircle, XCircle, Clock, Zap } from "lucide-react";
+import { Search, CheckCircle, XCircle, Clock, Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import nf from "../assets/empty.png"
 import logo from "../assets/code.png"
+import { useSearchParams } from "react-router";
+import { useChallenges } from "@/hooks/useChallenges";
+import axios from "axios";
+import { BASE_URL } from "@/config/config";
+
+interface TestCaseResult {
+  id: string;
+  input: string;
+  expected: string;
+  output: string;
+  passed: boolean;
+  executionTime: string;
+  errorMessage: string;
+}
 
 interface Submission {
   id: string;
-  challengeId: string;
-  studentName: string;
   studentId: string;
-  privateKey: string;
-  language: string;
+  submissionKey: string;
+  studentName: string;
+  challengeId: string;
   code: string;
-  submittedAt: string;
-  status: string;
+  language: string;
+  success: boolean;
   score: number;
+  message: string;
+  testCaseResult: TestCaseResult[];
+  createdAt: string;
 }
 
 const ResultLookup = () => {
+  const [searchParams] = useSearchParams();
+const urlChallengeId = searchParams.get("challenge");
   const [showLookupModal, setShowLookupModal] = useState(true);
   const [lookupData, setLookupData] = useState({ studentId: "", privateKey: "" });
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [challenge, setChallenge] = useState<any>(null);
   const [analysisLoading, setAnalysisLoading] = useState(false);
 const [analysisResult, setAnalysisResult] = useState<null | { title: string; content: string }>(null);
+  const {data: challenges, isLoading} = useChallenges()
+  const [loading, setLoading] = useState(false)
 
-  const handleLookup = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const submissions = JSON.parse(localStorage.getItem("submissions") || "[]");
-    const foundSubmission = submissions.find((s: Submission) => 
-      s.studentId === lookupData.studentId && s.privateKey === lookupData.privateKey
+  useEffect(() => {
+      if (urlChallengeId) {
+        const foundChallenge = challenges?.find((c) => c.id === urlChallengeId);
+        setChallenge(foundChallenge);
+      }
+    }, [isLoading]);
+
+  const handleLookup = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!lookupData.studentId || !lookupData.privateKey) {
+    toast.error("Missing Fields", {
+      description: <p className="text-gray-700">Please fill in both Student ID and Private Key</p>,
+      icon: <XCircle className="text-red-500" />,
+      duration: 3000,
+    });
+    return;
+  }
+
+  setAnalysisResult(null);
+  setLoading(true);
+
+  try {
+    const res = await axios.get(
+      `${BASE_URL}/api/v1/submissions/student/${urlChallengeId}/${lookupData.studentId}/${lookupData.privateKey}`
     );
 
-    if (!foundSubmission) {
+    const data = res.data;
+
+    if (!data || Object.keys(data).length === 0) {
       toast.error("No Results Found", {
-  description: <p className="text-gray-700">Please check your Student ID and Private Key</p>,
-  icon: <XCircle className="text-blue-500" />,
-  duration: 3000,
-});
+        description: <p className="text-gray-700">Please check your Student ID and Private Key</p>,
+        icon: <XCircle className="text-red-500" />,
+        duration: 3000,
+      });
       return;
     }
+console.log(data);
 
-    // Get challenge details
-    const challenges = JSON.parse(localStorage.getItem("challenges") || "[]");
-    const challengeDetails = challenges.find((c: any) => c.id === foundSubmission.challengeId);
+    setSubmission(data);
 
-    setSubmission(foundSubmission);
-    setChallenge(challengeDetails);
+    toast.success("Result Found", {
+      description: <p className="text-gray-700">Your submission result was loaded successfully</p>,
+      icon: <CheckCircle className="text-green-500" />,
+      duration: 2500,
+    });
+
     setShowLookupModal(false);
-  };
+  } catch (err: any) {
+    console.error(err);
+    toast.error("Lookup Failed", {
+      description: <p className="text-gray-700">{err?.response?.data?.error|| err?.response?.status==403 && "Incorrect prrivate key" ||"Something went wrong. Please try again later."}</p>,
+      icon: <XCircle className="text-red-500" />,
+      duration: 3000,
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const analyzeCode = () => {
   setAnalysisLoading(true);
@@ -87,11 +142,6 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
     return new Date(dateString).toLocaleString();
   };
 
-  const mockTestResults = [
-    { input: "[2, 7, 11, 15], target = 9", expected: "[0, 1]", actual: "[0, 1]", passed: true, time: "2ms" },
-    { input: "[3, 2, 4], target = 6", expected: "[1, 2]", actual: "[1, 2]", passed: true, time: "1ms" },
-    { input: "[3, 3], target = 6", expected: "[0, 1]", actual: "[0, 1]", passed: true, time: "1ms" },
-  ];
 
   return (
     <>
@@ -126,8 +176,17 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
               />
             </div>
             <Button type="submit" className="w-full gradient-bg">
-              <Search className="h-4 w-4 mr-2" />
+              {loading ? (
+    <>
+      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+      Lookingup Results...
+    </>
+  ) : (
+    <>
+    <Search className="h-4 w-4 mr-2" />
               Lookup Results
+              </>
+  )}
             </Button>
           </form>
         </DialogContent>
@@ -158,48 +217,49 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
   <CardHeader>
     <div className="flex items-center justify-between">
       <div>
-        <CardTitle className="flex items-center gap-2">
-          {submission.status === "passed" ? (
+        <CardTitle className="mb-3">
+          {submission.studentName} ({submission.studentId})
+        </CardTitle>
+        <CardDescription className="flex items-center gap-2">
+          {submission.success ? (
             <CheckCircle className="h-5 w-5 text-green-600" />
           ) : (
             <XCircle className="h-5 w-5 text-red-600" />
           )}
           {challenge.title}
-        </CardTitle>
-        <CardDescription>
-          Submitted by {submission.studentName} ({submission.studentId})
         </CardDescription>
       </div>
       <div className="text-right">
-        <div className="text-2xl font-bold text-primary">{submission.score}%</div>
-        <Badge variant={submission.status === "passed" ? "default" : "destructive"}>
-          {submission.status}
+        <div className="text-2xl font-bold text-blue-500">{submission.score}%</div>
+        <Badge variant={submission.success ? "default" : "destructive"}>
+          {submission.success? "passed" : "failed"}
         </Badge>
       </div>
     </div>
   </CardHeader>
 
   <CardContent>
+    {/* Challenge Description */}
+    {challenge.description && (
+      <div className="mb-3 text-sm text-gray-700">
+        <h4 className="font-semibold text-gray-800 mb-1">Challenge Description</h4>
+        <p className="whitespace-pre-line">{challenge.description}</p>
+      </div>
+    )}
     <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600">
       <div>
         <span className="font-medium">Language:</span> {submission.language}
       </div>
       <div>
-        <span className="font-medium">Submitted:</span> {formatDate(submission.submittedAt)}
+        <span className="font-medium">Submitted:</span> {formatDate(submission.createdAt)}
       </div>
       <div>
         <span className="font-medium">Test Cases:</span>{" "}
-        {mockTestResults.filter((t) => t.passed).length}/{mockTestResults.length} passed
+        {submission.testCaseResult.filter((t) => t.passed).length}/{submission.testCaseResult.length} passed
       </div>
     </div>
 
-    {/* Challenge Description */}
-    {challenge.description && (
-      <div className="mt-6 text-sm text-gray-700">
-        <h4 className="font-semibold text-gray-800 mb-2">Challenge Description</h4>
-        <p className="whitespace-pre-line">{challenge.description}</p>
-      </div>
-    )}
+    
   </CardContent>
 </Card>
 
@@ -211,17 +271,17 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {mockTestResults.map((test, index) => (
+          {submission.testCaseResult.map((test, index) => (
             <div key={index} className="border rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">Test Case {index + 1}</span>
                 <div className="flex items-center gap-2">
                   <Badge variant={test.passed ? "default" : "destructive"}>
-                    {test.passed ? "PASS" : "FAIL"}
+                    {test.passed ? "passed" : "failed"}
                   </Badge>
                   <div className="flex items-center gap-1 text-sm text-gray-600">
                     <Clock className="h-3 w-3" />
-                    {test.time}
+                    {test.executionTime}
                   </div>
                 </div>
               </div>
@@ -233,7 +293,7 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
                   <span className="font-medium">Expected:</span> {test.expected}
                 </div>
                 <div>
-                  <span className="font-medium">Actual:</span> {test.actual}
+                  <span className="font-medium">Actual:</span> {test.output}
                 </div>
               </div>
             </div>
@@ -255,7 +315,7 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
         <pre className="text-sm">
           <code>
             {submission.code ||
-              "// Your submitted code will appear here\nfunction solution(input) {\n    // Implementation\n    return result;\n}"}
+              ""}
           </code>
         </pre>
       </div>
