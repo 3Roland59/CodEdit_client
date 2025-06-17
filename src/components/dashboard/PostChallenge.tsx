@@ -7,16 +7,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Trash2, Copy, XCircle, CheckCircle, Info } from "lucide-react";
+import { Plus, Trash2, Copy, XCircle, CheckCircle, Info, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Lottie from "lottie-react";
 import animationData from "../../assets/success.json";
+import { BASE_URL } from "@/config/config";
+import axios from "axios";
 
 interface TestCase {
   id: string;
-  inputType: string;
+  inputDataType: string;
   inputValue: string;
-  outputType: string;
+  outputDataType: string;
   outputValue: string;
 }
 
@@ -31,23 +33,25 @@ const PostChallenge = () => {
     hasTimeLimit: false,
     hasDeadline: false,
   deadline: "",
+  challengeKey:""
   });
 
   const [testCases, setTestCases] = useState<TestCase[]>([
-    { id: "1", inputType: "", inputValue: "", outputType: "", outputValue: "" }
+    { id: "1", inputDataType: "", inputValue: "", outputDataType: "", outputValue: "" }
   ]);
 
   const [showShareLink, setShowShareLink] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const languages = ["python", "javascript", "typescript"];
-  const dataTypes = ["string", "integer", "boolean", "array",];
+  const dataTypes = ["string", "integer", "decimal", "boolean", "array",];
 
   const addTestCase = () => {
     const newTestCase: TestCase = {
       id: Date.now().toString(),
-      inputType: "string",
+      inputDataType: "string",
       inputValue: "",
-      outputType: "string",
+      outputDataType: "string",
       outputValue: ""
     };
     setTestCases([...testCases, newTestCase]);
@@ -68,22 +72,22 @@ const PostChallenge = () => {
   const isValidType = (type: string) => dataTypes.includes(type.trim());
 
 const isValidTestCase = (tc: TestCase) => {
-  const inputTypes = tc.inputType.split(",").map(t => t.trim());
-  const inputValues = tc.inputValue.split(",").map(v => v.trim());
-  const outputTypes = tc.outputType.split(",").map(t => t.trim());
-  const outputValues = tc.outputValue.split(",").map(v => v.trim());
+  const inputDataTypes = tc.inputDataType.split(";").map(t => t.trim());
+  const inputValues = tc.inputValue.split(";").map(v => v.trim());
+  const outputDataTypes = tc.outputDataType.split(";").map(t => t.trim());
+  const outputValues = tc.outputValue.split(";").map(v => v.trim());
 
-  const allInputTypesValid = inputTypes.every(isValidType);
-  const allOutputTypesValid = outputTypes.every(isValidType);
+  const allInputDataTypesValid = inputDataTypes.every(isValidType);
+  const allOutputDataTypesValid = outputDataTypes.every(isValidType);
 
-  const inputCountMatches = inputTypes.length === inputValues.length;
-  const outputCountMatches = outputTypes.length === outputValues.length;
+  const inputCountMatches = inputDataTypes.length === inputValues.length;
+  const outputCountMatches = outputDataTypes.length === outputValues.length;
 
   return (
     tc.inputValue &&
     tc.outputValue &&
-    allInputTypesValid &&
-    allOutputTypesValid &&
+    allInputDataTypesValid &&
+    allOutputDataTypesValid &&
     inputCountMatches &&
     outputCountMatches
   );
@@ -102,65 +106,113 @@ const isValidTestCase = (tc: TestCase) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (formData.languages.length === 0) {
-      toast.error("Missing language selection", {
-  description: <p className="text-gray-700">Please select at least one programming language.</p>,
-  icon: <XCircle className="text-red-500" />,
-  duration: 4000,
-});
-      return;
-    }
 
-    if (testCases.some(tc => !isValidTestCase(tc))) {
-  toast.error("Invalid Test Case", {
-    description: (
-      <p className="text-gray-700">
-        Make sure each test case has valid, comma-separated types and values.<br />
-        Valid types: <code>{dataTypes.join(", ")}</code>
-      </p>
-    ),
-    icon: <XCircle className="text-red-500" />,
-    duration: 4000,
-  });
-  return;
-}
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
 
+  if (formData.languages.length === 0) {
+    toast.error("Missing language selection", {
+      description: (
+        <p className="text-gray-700">
+          Please select at least one programming language.
+        </p>
+      ),
+      icon: <XCircle className="text-red-500" />,
+      duration: 4000,
+    });
+    return;
+  }
 
-    if (formData.hasDeadline && new Date(formData.deadline) <= new Date()) {
-  toast.error("Invalid deadline", {
-  description: <p className="text-gray-700">Deadline must be a future date and time.</p>,
-  icon: <XCircle className="text-red-500" />,
-  duration: 4000,
-});
+  if (testCases.some((tc) => !isValidTestCase(tc))) {
+    toast.error("Invalid Test Case", {
+      description: (
+        <p className="text-gray-700">
+          Make sure each test case has valid, comma-separated types and values.
+          <br />
+          Valid types: <code>{dataTypes.join(", ")}</code>
+        </p>
+      ),
+      icon: <XCircle className="text-red-500" />,
+      duration: 4000,
+    });
+    return;
+  }
 
-  return;
-}
+  if (formData.hasDeadline && new Date(formData.deadline) <= new Date()) {
+    toast.error("Invalid deadline", {
+      description: (
+        <p className="text-gray-700">
+          Deadline must be a future date and time.
+        </p>
+      ),
+      icon: <XCircle className="text-red-500" />,
+      duration: 4000,
+    });
+    return;
+  }
 
-    const challengeId = Date.now().toString();
-    const challenge = {
-      id: challengeId,
-      ...formData,
-      testCases,
-      createdAt: new Date().toISOString(),
-      teacherId: "teacher-1"
-    };
+  let deadline = "";
+  let time = 0;
+  if (formData.hasDeadline) {
+    deadline = new Date(formData.deadline).toISOString();
+  }
+  if (formData.hasTimeLimit) {
+    time = Number(formData.timeLimit);
+  }
 
-    const existingChallenges = JSON.parse(localStorage.getItem("challenges") || "[]");
-    existingChallenges.push(challenge);
-    localStorage.setItem("challenges", JSON.stringify(existingChallenges));
+  const challenge = {
+    title: formData.title,
+    description: formData.description,
+    deadline,
+    time,
+    challengeKey: formData.challengeKey,
+    languages: formData.languages.join(","),
+    testCases,
+  };
 
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      BASE_URL+"/api/v1/challenges",
+      challenge,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const challengeId = res.data.id;
     const shareLink = `${window.location.origin}/challenge/${challengeId}`;
     setShowShareLink(shareLink);
 
     toast.success("Challenge created", {
-  description: <p className="text-gray-700">Your students can now access the challenge.</p>,
-  icon: <CheckCircle className="text-green-500" />,
-  duration: 4000,
-});
-  };
+      description: (
+        <p className="text-gray-700">
+          Your students can now access the challenge.
+        </p>
+      ),
+      icon: <CheckCircle className="text-green-500" />,
+      duration: 4000,
+    });
+  } catch (error: any) {
+    console.error(error);
+    toast.error("Failed to create challenge", {
+      description: (
+        <p className="text-gray-700">
+          {error?.response?.data?.message || "Please try again later."}
+        </p>
+      ),
+      icon: <XCircle className="text-red-500" />,
+      duration: 4000,
+    });
+  }finally {
+    setLoading(false);
+  }
+};
+
 
   const copyShareLink = () => {
     navigator.clipboard.writeText(showShareLink);
@@ -327,7 +379,7 @@ const isValidTestCase = (tc: TestCase) => {
                 Define test cases that will validate student solutions
               </CardDescription>
               <CardDescription className="text-green-600">
-                *Data types allowed: string,array,integer,boolean
+                *Data types allowed: string,array,integer,boolean,decimal
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -351,19 +403,19 @@ const isValidTestCase = (tc: TestCase) => {
                       <div className="space-y-2">
                         <Label>Input Types</Label>
                         <Input
-                            placeholder='e.g., string,array'
-                            value={testCase.inputType}
-                            onChange={(e) => updateTestCase(testCase.id, "inputType", e.target.value)}
+                            placeholder='e.g., string;array'
+                            value={testCase.inputDataType}
+                            onChange={(e) => updateTestCase(testCase.id, "inputDataType", e.target.value)}
                         />
-                        <p className="text-sm text-muted-foreground">
-                            Use comma-separated values (e.g., <code>string,boolean</code>)
+                        <p className="text-xs text-muted-foreground">
+                            Use semi-colon to separate parameters (e.g., <code>string;boolean</code>)
                         </p>
                         </div>
                     
                     <div className="space-y-2">
                       <Label>Input Values</Label>
                       <Input
-                        placeholder="e.g., hello,[2, 7, 11, 15]"
+                        placeholder="e.g., hello;[2, 7, 11, 15]"
                         value={testCase.inputValue}
                         onChange={(e) => updateTestCase(testCase.id, "inputValue", e.target.value)}
                       />
@@ -372,12 +424,12 @@ const isValidTestCase = (tc: TestCase) => {
                     <div className="space-y-2">
   <Label>Output Types</Label>
   <Input
-    placeholder='e.g., boolean,integer'
-    value={testCase.outputType}
-    onChange={(e) => updateTestCase(testCase.id, "outputType", e.target.value)}
+    placeholder='e.g., boolean;integer'
+    value={testCase.outputDataType}
+    onChange={(e) => updateTestCase(testCase.id, "outputDataType", e.target.value)}
   />
-  <p className="text-sm text-muted-foreground">
-    Use comma-separated values (e.g., <code>string,boolean</code>)
+  <p className="text-xs text-muted-foreground">
+    Use semi-colon to separate parameters (e.g., <code>string;boolean</code>)
   </p>
 </div>
 
@@ -385,7 +437,7 @@ const isValidTestCase = (tc: TestCase) => {
                     <div className="space-y-2">
                       <Label>Output Values</Label>
                       <Input
-                        placeholder="e.g., false,8"
+                        placeholder="e.g., false;8"
                         value={testCase.outputValue}
                         onChange={(e) => updateTestCase(testCase.id, "outputValue", e.target.value)}
                       />
@@ -411,18 +463,25 @@ const isValidTestCase = (tc: TestCase) => {
                 <Input
                   id="challengeKey"
                   placeholder="Enter your key required to open challenge"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  required
+                  value={formData.challengeKey}
+                  onChange={(e) => setFormData({ ...formData, challengeKey: e.target.value })}
                 />
               </div>
               </CardContent>
               </Card>
 
           <div className="flex justify-end">
-            <Button type="submit" className="gradient-bg rounded-3xl">
-              Create Challenge
-            </Button>
+            <Button type="submit" className="gradient-bg rounded-3xl" disabled={loading}>
+  {loading ? (
+    <>
+      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+      Creating...
+    </>
+  ) : (
+    "Create Challenge"
+  )}
+</Button>
+
           </div>
         </form>
       </div>

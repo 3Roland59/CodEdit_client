@@ -1,1 +1,1 @@
-export const BASE_URL = "https://codedit-server.onrender.com"
+export const BASE_URL = "https://codeditserver-production.up.railway.app"

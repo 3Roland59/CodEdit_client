@@ -13,12 +13,15 @@ import StudentChallenge from './pages/StudentChallenge'
 import Submissions from './components/dashboard/Submissions'
 import ResultLookup from './pages/ResultLookup'
 import { UserProvider } from './context/UserContext'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
+  const queryClient = new QueryClient();
 
   return (
     <>
     <UserProvider>
+      <QueryClientProvider client={queryClient}>
         <Toaster />
       <Routes>
         <Route path='/' element={<Homepage />} />
@@ -34,6 +37,7 @@ function App() {
         <Route path="/results" element={<ResultLookup />} />
         <Route path='*' element={<Notfound />} />
       </Routes>
+      </QueryClientProvider>
       </UserProvider>
     </>
   )

@@ -1,3 +1,5 @@
+import { useUser } from "@/context/UserContext";
+import { useChallenges } from "@/hooks/useChallenges";
 import {
   BarChart,
   Bar,
@@ -14,12 +16,20 @@ const data = [
 ];
 
 export default function DashboardHome() {
+  const {user} = useUser()
+  const { data: challenges } = useChallenges();
+
+  const activeChallenges = ()=>{
+    const found = challenges?.filter(i=> new Date(i.deadline) > new Date())
+    return found?.length || 0
+  }
+
   return (
     <div className="p-4 md:p-6 space-y-6">
       {/* Welcome Section */}
       <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, Doe!
+            Welcome back, {user?.username}
           </h1>
           <p className="text-gray-600">
             Manage your coding challenges and track student progress
@@ -28,9 +38,9 @@ export default function DashboardHome() {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Challenges" value="12" />
-        <StatCard title="Active Challenges" value="5" />
-        <StatCard title="Total Submissions" value="24" />
+        <StatCard title="Total Challenges" value={challenges?.length || 0} />
+        <StatCard title="Active Challenges" value={activeChallenges()} />
+        <StatCard title="Total Submissions" value={24} />
         <StatCard title="Performance Rate" value="+3%" />
       </div>
 
@@ -70,7 +80,7 @@ export default function DashboardHome() {
   );
 }
 
-function StatCard({ title, value }: { title: string; value: string }) {
+function StatCard({ title, value }: { title: string; value: number|string }) {
   return (
     <div className="relative mb-2 sm:mb-0 bg-white rounded-2xl p-4 pt-6 border border-gray-200 overflow-visible">
       <div className="absolute -top-5 left-5 text-3xl md:text-4xl font-bold text-indigo-600">

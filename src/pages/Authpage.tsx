@@ -128,11 +128,11 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex items-center justify-center px-4">
       <ParticlesBackground />
-      <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-2xl border border-gray-200">
+      <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-3xl border border-gray-200">
         {/* Logo and Header */}
         <div className="flex flex-row items-center justify-center gap-4 mb-6">
-          <img src={logo} alt="CodEdit Logo" className="w-16 h-16 object-contain" />
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-blue-600 tracking-tight animate-fade-in">
+          <img src={logo} alt="CodEdit Logo" className="w-12 h-12 object-contain" />
+          <h1 className="text-4xl sm:text-3xl font-extrabold text-blue-600 tracking-tight animate-fade-in">
             CodEdit
           </h1>
         </div>
@@ -165,7 +165,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               <User className="absolute left-3 top-[70%] transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                className="w-full pl-10 pr-4 py-2 rounded-xl border"
+                className="w-full pl-10 pr-4 py-2 rounded-3xl border"
                 placeholder="John Doe"
                 value={signupData.name}
                 onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
@@ -180,7 +180,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
             <Mail className="absolute left-3 top-[70%] transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="email"
-              className="w-full pl-10 pr-4 py-2 rounded-xl border"
+              className="w-full pl-10 pr-4 py-2 rounded-3xl border"
               placeholder="teacher@school.edu"
               value={activeTab === "login" ? loginData.email : signupData.email}
               onChange={(e) =>
@@ -198,7 +198,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
             <Lock className="absolute left-3 top-[70%] transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="password"
-              className="w-full pl-10 pr-4 py-2 rounded-xl border"
+              className="w-full pl-10 pr-4 py-2 rounded-3xl border"
               value={activeTab === "login" ? loginData.password : signupData.password}
               onChange={(e) =>
                 activeTab === "login"
@@ -215,7 +215,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               <LockKeyhole className="absolute left-3 top-[70%] transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="password"
-                className="w-full pl-10 pr-4 py-2 rounded-xl border"
+                className="w-full pl-10 pr-4 py-2 rounded-3xl border"
                 value={signupData.confirmPassword}
                 onChange={(e) =>
                   setSignupData({ ...signupData, confirmPassword: e.target.value })
