@@ -36,8 +36,6 @@ const ChallengeDetail = () => {
   const {data: challenges, isLoading} = useChallenges()
 
   useEffect(() => {
-    console.log(challenges);
-    
     if (id) {
       const foundChallenge = challenges?.find((c: Challenge) => c.id === id);
       setChallenge(foundChallenge);

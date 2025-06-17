@@ -6,20 +6,35 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Eye, Copy, BarChart3, Info } from "lucide-react";
+import { Eye, Copy, BarChart3, Info, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import nf from "../../assets/empty.png"
+import { useChallenges } from "@/hooks/useChallenges";
+import { useSubmissions } from "@/hooks/useSubmissions";
+
+interface TestCaseResult {
+  id: string;
+  input: string;
+  expected: string;
+  output: string;
+  passed: boolean;
+  executionTime: string;
+  errorMessage: string;
+}
 
 interface Submission {
   id: string;
-  challengeId: string;
-  studentName: string;
   studentId: string;
-  language: string;
+  submissionKey: string;
+  studentName: string;
+  challengeId: string;
   code: string;
-  submittedAt: string;
-  status: string;
+  language: string;
+  success: boolean;
   score: number;
+  message: string;
+  testCaseResult: TestCaseResult[];
+  createdAt: string;
 }
 
 const Submissions = () => {
@@ -29,20 +44,19 @@ const Submissions = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [showModal, setShowModal] = useState(false);
+    const {data: challenges, isLoading} = useChallenges()
+    const {data: subs, isLoading: isLoadingS} = useSubmissions(challengeId || '')
 
   useEffect(() => {
     if (challengeId) {
-      // Load challenge details
-      const challenges = JSON.parse(localStorage.getItem("challenges") || "[]");
-      const foundChallenge = challenges.find((c: any) => c.id === challengeId);
+      const foundChallenge = challenges?.find((c) => c.id === challengeId);
       setChallenge(foundChallenge);
-
-      // Load submissions
-      const allSubmissions = JSON.parse(localStorage.getItem("submissions") || "[]");
-      const challengeSubmissions = allSubmissions.filter((s: Submission) => s.challengeId === challengeId);
-      setSubmissions(challengeSubmissions);
     }
   }, [challengeId]);
+
+  useEffect(() =>{
+    setSubmissions(subs || [])
+  }, [isLoadingS])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
@@ -64,15 +78,10 @@ const Submissions = () => {
 });
   };
 
-  const mockTestResults = [
-    { input: "[2, 7, 11, 15], target = 9", expected: "[0, 1]", actual: "[0, 1]", passed: true, time: "2ms" },
-    { input: "[3, 2, 4], target = 6", expected: "[1, 2]", actual: "[1, 2]", passed: true, time: "1ms" },
-    { input: "[3, 3], target = 6", expected: "[0, 1]", actual: "[0, 1]", passed: true, time: "1ms" },
-  ];
 
   const getStats = () => {
-    const total = submissions.length;
-    const passed = submissions.filter(s => s.status === "passed").length;
+    const total = submissions?.length;
+    const passed = submissions.filter(s => s.success === true).length;
     const avgScore = total > 0 ? Math.round(submissions.reduce((sum, s) => sum + s.score, 0) / total) : 0;
     const languages = [...new Set(submissions.map(s => s.language))];
     
@@ -80,6 +89,14 @@ const Submissions = () => {
   };
 
   const stats = getStats();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="animate-spin text-gray-600 h-8 w-8" />
+      </div>
+    );
+  }
 
   if (!challenge) {
     return (
@@ -160,7 +177,15 @@ const Submissions = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {submissions.length === 0 ? (
+            {isLoadingS ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No submissions yet</p>
+                <p className="text-sm text-gray-400 mt-2">
+                  Students will appear here once they submit their solutions
+                </p>
+              </div>
+            ) :
+            submissions.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-gray-500">No submissions yet</p>
                 <p className="text-sm text-gray-400 mt-2">
@@ -189,12 +214,12 @@ const Submissions = () => {
                         <Badge variant="outline">{submission.language}</Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge className={submission.status === "passed" ? "bg-blue-600" : ""} variant={submission.status === "passed" ? "default" : "destructive"}>
-                          {submission.status}
+                        <Badge className={submission.success ? "bg-blue-600" : ""} variant={submission.success ? "default" : "destructive"}>
+                          {submission.success? "passed" : "failed"}
                         </Badge>
                       </TableCell>
                       <TableCell className="font-medium">{submission.score}%</TableCell>
-                      <TableCell>{formatDate(submission.submittedAt)}</TableCell>
+                      <TableCell>{formatDate(submission.createdAt)}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
                           <Button
@@ -241,8 +266,8 @@ const Submissions = () => {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-gray-700">Status</div>
-                    <Badge className={selectedSubmission.status === "passed" ? "bg-blue-600" : ""}  variant={selectedSubmission.status === "passed" ? "default" : "destructive"}>
-                      {selectedSubmission.status}
+                    <Badge className={selectedSubmission.success ? "bg-blue-600" : ""}  variant={selectedSubmission.success ? "default" : "destructive"}>
+                      {selectedSubmission.success? "passed" : "failed"}
                     </Badge>
                   </div>
                   <div>
@@ -265,7 +290,7 @@ const Submissions = () => {
                 <div>
                   <h3 className="font-medium mb-4">Test Case Results</h3>
                   <div className="space-y-3">
-                    {mockTestResults.map((test, index) => (
+                    {selectedSubmission.testCaseResult.map((test, index) => (
                       <div key={index} className="border rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium">Test Case {index + 1}</span>
@@ -276,8 +301,8 @@ const Submissions = () => {
                         <div className="space-y-1 text-sm">
                           <div><span className="font-medium">Input:</span> {test.input}</div>
                           <div><span className="font-medium">Expected:</span> {test.expected}</div>
-                          <div><span className="font-medium">Actual:</span> {test.actual}</div>
-                          <div className="text-gray-600">Execution time: {test.time}</div>
+                          <div><span className="font-medium">Actual:</span> {test.output}</div>
+                          <div className="text-gray-600">Execution time: {test.executionTime}</div>
                         </div>
                       </div>
                     ))}
