@@ -92,6 +92,8 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
 console.log(data);
 
     setSubmission(data);
+    const foundChallenge = challenges?.find((c) => c.id === urlChallengeId);
+        setChallenge(foundChallenge);
 
     toast.success("Result Found", {
       description: <p className="text-gray-700">Your submission result was loaded successfully</p>,

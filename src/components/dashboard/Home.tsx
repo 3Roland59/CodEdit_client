@@ -27,7 +27,6 @@ export default function DashboardHome() {
     return found?.length || 0;
   };
 
-  // Dynamic Chart Data
   const chartData =
     challenges?.map((challenge) => {
       const submissionCount = submissions?.filter(
@@ -157,7 +156,7 @@ const averageScoreData =
         >
           {languageData.map((entry, index) => (
             <Cell
-              key={`cell-${index}`}
+              key={`cell-${entry.name}-${index}`}
               fill={COLORS[index % COLORS.length]}
             />
           ))}
