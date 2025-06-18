@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import nf from "../../assets/empty.png"
 import { useChallenges } from "@/hooks/useChallenges";
 import { useSubmissions } from "@/hooks/useSubmissions";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface TestCaseResult {
   id: string;
@@ -67,16 +69,40 @@ const Submissions = () => {
     setShowModal(true);
   };
 
-//   const copyResultLink = (submission: Submission) => {
-//     // In a real app, this would generate a secure link
-//     const resultLink = `${window.location.origin}/results?studentId=${submission.studentId}&key=${submission.id}`;
-//     navigator.clipboard.writeText(resultLink);
-//     toast.info("Result Link Copied", {
-//   description: <p className="text-gray-700">Share this link with the student to view their results</p>,
-//   icon: <Info className="text-blue-500" />,
-//   duration: 3000,
-// });
-//   };
+const exportToPDF = () => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text(`Submissions for "${challenge.title}"`, 14, 20);
+
+  // Add stats
+  doc.setFontSize(12);
+  doc.text(`Total Submissions: ${stats.total}`, 14, 30);
+  doc.text(`Passed: ${stats.passed}`, 14, 36);
+  doc.text(`Average Score: ${stats.avgScore}%`, 14, 42);
+  doc.text(`Languages Used: ${stats.languages.join(", ")}`, 14, 48);
+
+  // Table starts after stats
+  autoTable(doc, {
+    startY: 56,
+    head: [["Student Name", "Student ID", "Language", "Status", "Score", "Submitted At"]],
+    body: submissions.map((s) => [
+      s.studentName,
+      s.studentId,
+      s.language,
+      s.success ? "Passed" : "Failed",
+      `${s.score}%`,
+      formatDate(s.createdAt),
+    ]),
+    theme: "grid",
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [79, 70, 229] }, // Indigo-600
+  });
+
+  doc.save(`submissions-${challengeId}.pdf`);
+};
+
+
 
 
   const getStats = () => {
@@ -133,54 +159,61 @@ const Submissions = () => {
           <p className="text-gray-600">
             Track and analyze student submissions
           </p>
+          <div className="flex flex-row items-center justify-end gap-3 mt-3">
           <Button onClick={copyShareLink} className="rounded-3xl float-right" variant="outline">
                         <Copy className="h-4 w-4 mr-2" />
                         Copy Share Link
                       </Button>
+                      <Button onClick={exportToPDF} className="rounded-3xl mr-2" variant="outline">
+  <BarChart3 className="h-4 w-4 mr-2" />
+  Export PDF
+</Button>
+</div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Submissions</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.total}</div>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
+  <Card className="w-full h-full">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-xs md:text-sm font-medium">Total Submissions</CardTitle>
+      <BarChart3 className="h-4 w-4 text-muted-foreground" />
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">{stats.total}</div>
+    </CardContent>
+  </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Passed</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.passed}</div>
-            </CardContent>
-          </Card>
+  <Card className="w-full h-full">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-xs md:text-sm font-medium">Passed</CardTitle>
+      <BarChart3 className="h-4 w-4 text-muted-foreground" />
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold text-green-600">{stats.passed}</div>
+    </CardContent>
+  </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average Score</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.avgScore}%</div>
-            </CardContent>
-          </Card>
+  <Card className="w-full h-full">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-xs md:text-sm font-medium">Average Score</CardTitle>
+      <BarChart3 className="h-4 w-4 text-muted-foreground" />
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">{stats.avgScore}%</div>
+    </CardContent>
+  </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Languages Used</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.languages.length}</div>
-            </CardContent>
-          </Card>
-        </div>
+  <Card className="w-full h-full">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-xs md:text-sm font-medium">Languages Used</CardTitle>
+      <BarChart3 className="h-4 w-4 text-muted-foreground" />
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">{stats.languages.length}</div>
+    </CardContent>
+  </Card>
+</div>
+
 
         {/* Submissions Table */}
         <Card>

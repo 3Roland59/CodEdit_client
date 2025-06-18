@@ -14,6 +14,8 @@ import { useSearchParams } from "react-router";
 import { useChallenges } from "@/hooks/useChallenges";
 import axios from "axios";
 import { BASE_URL } from "@/config/config";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface TestCaseResult {
   id: string;
@@ -113,6 +115,76 @@ console.log(data);
     setLoading(false);
   }
 };
+
+const exportResultToPDF = () => {
+  if (!submission || !challenge) return;
+
+  const doc = new jsPDF();
+
+  // Header
+  doc.setFontSize(18);
+  doc.text(`Submission Result for ${submission.studentName} (${submission.studentId})`, 14, 20);
+
+  // Basic Info
+  doc.setFontSize(12);
+  doc.text(`Challenge: ${challenge.title}`, 14, 30);
+  doc.text(`Language: ${submission.language}`, 14, 36);
+  doc.text(`Score: ${submission.score}%`, 14, 42);
+  doc.text(`Submitted: ${formatDate(submission.createdAt)}`, 14, 48);
+  doc.text(`Status: ${submission.success ? "Passed" : "Failed"}`, 14, 54);
+  doc.text(
+    `Test Cases Passed: ${submission.testCaseResult.filter((t) => t.passed).length}/${submission.testCaseResult.length}`,
+    14,
+    60
+  );
+
+  // Add table
+  autoTable(doc, {
+    startY: 70,
+    head: [["#", "Input", "Expected", "Output", "Status", "Time"]],
+    body: submission.testCaseResult.map((t, index) => [
+      index + 1,
+      t.input,
+      t.expected,
+      t.output,
+      t.passed ? "Passed" : "Failed",
+      t.executionTime,
+    ]),
+    theme: "grid",
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [79, 70, 229] },
+  });
+
+  // Safely get last Y position
+  const finalY = (doc as any)?.lastAutoTable?.finalY || 80;
+
+  // Add code
+  const codeLines = submission.code?.split("\n") || ["// No code submitted"];
+  doc.setFontSize(14).setFont("helvetica", "bold");
+  doc.text("Submitted Code:", 14, finalY + 10);
+
+  doc.setFont("Courier", "normal");
+  doc.setFontSize(10);
+
+  const lineHeight = 5;
+  const maxWidth = 180;
+  let y = finalY + 16;
+
+  for (const line of codeLines) {
+    const wrappedLines = doc.splitTextToSize(line, maxWidth);
+    for (const l of wrappedLines) {
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(l, 14, y);
+      y += lineHeight;
+    }
+  }
+
+  doc.save(`result-${submission.studentId}.pdf`);
+};
+
 
 
   const analyzeCode = () => {
@@ -260,6 +332,10 @@ console.log(data);
         {submission.testCaseResult.filter((t) => t.passed).length}/{submission.testCaseResult.length} passed
       </div>
     </div>
+
+<Button onClick={exportResultToPDF} className="w-full mt-3" variant="outline">
+  Export Result as PDF
+</Button>
 
     
   </CardContent>
