@@ -185,32 +185,80 @@ const exportResultToPDF = () => {
 };
 
 
+const analyzeCode = async () => {
+  if (!submission || !challenge) return;
 
-  const analyzeCode = () => {
   setAnalysisLoading(true);
-  setAnalysisResult(null); // Optional: reset if re-running
+  setAnalysisResult(null);
 
-  setTimeout(() => {
-    const analyses = [
-      {
-        title: "Code Optimization Suggestions",
-        content:
-          "Your solution works correctly! Here are some optimization suggestions:\n\n1. Use a more efficient algorithm\n2. Optimize memory usage\n3. Improve edge case handling",
-      },
-      {
-        title: "Code Analysis & Fixes",
-        content:
-          "Your code has some issues. Here's how to fix them:\n\n1. Fix logic in line 5 (should be <=)\n2. Add null checks\n3. Handle empty input arrays",
-      },
-    ];
+  const prompt = `Analyze the following code submission.
 
-    const randomAnalysis = analyses[Math.floor(Math.random() * analyses.length)];
-    setAnalysisResult(randomAnalysis);
+Challenge Description:
+${challenge.description}
+
+Submitted Code:
+${submission.code}
+
+Test Cases:
+${submission.testCaseResult
+    .map(
+      (t, i) => `Test Case ${i + 1}:
+Input: ${t.input}
+Expected: ${t.expected}
+Output: ${t.output}
+Passed: ${t.passed}
+Execution Time: ${t.executionTime}`
+    )
+    .join("\n\n")}
+
+Provide detailed feedback on:
+1. Correctness
+2. Optimization opportunities
+3. Code quality
+4. Edge cases handled or missed
+`;
+
+  const options = {
+    method: "POST",
+    url: "https://open-ai32.p.rapidapi.com/conversationgpt35",
+    headers: {
+      "x-rapidapi-key": "ca1b249b7bmsh36fd72e9ca0bd25p1ba44djsnb30f488bd941",
+      "x-rapidapi-host": "open-ai32.p.rapidapi.com",
+      "Content-Type": "application/json",
+    },
+    data: {
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      web_access: false,
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    const resultText =
+      response.data?.result || response.data?.choices?.[0]?.message?.content;
+
+    setAnalysisResult({
+      title: "AI Code Feedback",
+      content: resultText || "No response from AI model.",
+    });
+  } catch (error) {
+    console.error("AI analysis error:", error);
+    toast.error("AI Analysis Failed", {
+      description: "Something went wrong analyzing the code.",
+      icon: <XCircle className="text-red-500" />,
+      duration: 3000,
+    });
+  } finally {
     setAnalysisLoading(false);
-  }, 2000); // Simulate 2 seconds of loading
+  }
 };
 
-
+  
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
   };
