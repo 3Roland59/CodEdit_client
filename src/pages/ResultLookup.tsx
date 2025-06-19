@@ -16,6 +16,7 @@ import axios from "axios";
 import { BASE_URL } from "@/config/config";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import ReactMarkdown from "react-markdown";
 
 interface TestCaseResult {
   id: string;
@@ -137,7 +138,7 @@ const exportResultToPDF = () => {
     60
   );
 
-  // Add table
+  // Table of test case results
   autoTable(doc, {
     startY: 70,
     head: [["#", "Input", "Expected", "Output", "Status", "Time"]],
@@ -154,24 +155,22 @@ const exportResultToPDF = () => {
     headStyles: { fillColor: [79, 70, 229] },
   });
 
-  // Safely get last Y position
-  const finalY = (doc as any)?.lastAutoTable?.finalY || 80;
+  let y = (doc as any)?.lastAutoTable?.finalY || 80;
 
-  // Add code
+  // Code block
   const codeLines = submission.code?.split("\n") || ["// No code submitted"];
   doc.setFontSize(14).setFont("helvetica", "bold");
-  doc.text("Submitted Code:", 14, finalY + 10);
+  doc.text("Submitted Code:", 14, y + 10);
+  y += 16;
 
   doc.setFont("Courier", "normal");
   doc.setFontSize(10);
-
-  const lineHeight = 5;
   const maxWidth = 180;
-  let y = finalY + 16;
+  const lineHeight = 5;
 
   for (const line of codeLines) {
-    const wrappedLines = doc.splitTextToSize(line, maxWidth);
-    for (const l of wrappedLines) {
+    const wrapped = doc.splitTextToSize(line, maxWidth);
+    for (const l of wrapped) {
       if (y > 280) {
         doc.addPage();
         y = 20;
@@ -181,8 +180,35 @@ const exportResultToPDF = () => {
     }
   }
 
+  // AI Analysis
+  if (analysisResult) {
+    if (y > 260) {
+      doc.addPage();
+      y = 20;
+    }
+
+    doc.setFontSize(14).setFont("helvetica", "bold");
+    doc.text("AI Analysis:", 14, y + 10);
+    y += 16;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const analysisLines = doc.splitTextToSize(`${analysisResult.title}\n\n${analysisResult.content}`, maxWidth);
+
+    for (const line of analysisLines) {
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(line, 14, y);
+      y += lineHeight;
+    }
+  }
+
+  // Save the PDF
   doc.save(`result-${submission.studentId}.pdf`);
 };
+
 
 
 const analyzeCode = async () => {
@@ -330,9 +356,9 @@ Provide detailed feedback on:
 
         {submission && challenge ? (
           <div className="container mx-auto px-4 py-6">
-            <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
   {/* Left Side: Result Header + Test Cases (2/3 of width on large screens) */}
-  <div className="space-y-6 lg:col-span-3">
+  <div className="space-y-6 lg:col-span-2">
     {/* Result Header */}
     <Card>
   <CardHeader>
@@ -458,9 +484,10 @@ Provide detailed feedback on:
     ) : analysisResult ? (
       <div>
         <h3 className="font-semibold text-lg mb-2">{analysisResult.title}</h3>
-        <pre className="text-sm whitespace-pre-wrap text-gray-700">
-          {analysisResult.content}
-        </pre>
+        <div className="prose prose-sm max-w-none text-gray-700">
+  <ReactMarkdown>{analysisResult.content}</ReactMarkdown>
+</div>
+
       </div>
     ) : (
       <Button onClick={analyzeCode} variant="outline" className="w-full">
