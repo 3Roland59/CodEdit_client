@@ -91,7 +91,6 @@ const [analysisResult, setAnalysisResult] = useState<null | { title: string; con
       });
       return;
     }
-console.log(data);
 
     setSubmission(data);
     const foundChallenge = challenges?.find((c) => c.id === urlChallengeId);

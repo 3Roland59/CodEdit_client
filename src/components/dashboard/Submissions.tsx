@@ -13,6 +13,14 @@ import { useChallenges } from "@/hooks/useChallenges";
 import { useSubmissions } from "@/hooks/useSubmissions";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+
+import { SlidersHorizontal, ArrowUpDown } from "lucide-react";
+
 
 interface TestCaseResult {
   id: string;
@@ -48,6 +56,10 @@ const Submissions = () => {
   const [showModal, setShowModal] = useState(false);
     const {data: challenges, isLoading} = useChallenges()
     const {data: subs, isLoading: isLoadingS} = useSubmissions(challengeId || '')
+    const [filter, setFilter] = useState("all");
+const [sortBy, setSortBy] = useState("");
+
+
 
   useEffect(() => {
     if (challengeId) {
@@ -149,6 +161,33 @@ const exportToPDF = () => {
 });
   };
 
+  const handleFilter = (value: string) => {
+  setFilter(value);
+};
+
+const handleSort = (value: string) => {
+  setSortBy(value);
+};
+
+const filteredSubmissions = submissions.filter((s) => {
+  if (filter === "all") return true;
+  if (filter === "passed") return s.success;
+  if (filter === "failed") return !s.success;
+  if (filter.startsWith("language:")) {
+    const lang = filter.split(":")[1];
+    return s.language === lang;
+  }
+  return true;
+});
+
+const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
+  if (sortBy === "scoreh") return b.score - a.score;
+  if (sortBy === "scorel") return a.score - b.score;
+  if (sortBy === "date") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  if (sortBy === "name") return a.studentName.localeCompare(b.studentName);
+  return 0;
+});
+
   return (
       <div className="max-w-6xl mx-auto p-2 sm:p-0">
         {/* Header */}
@@ -224,6 +263,46 @@ const exportToPDF = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="flex items-center justify-end mb-4 gap-3">
+  {/* Sort Popover */}
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button variant="outline" size="sm">
+        <ArrowUpDown className="w-4 h-4 mr-1" />
+        Sort
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent className="w-52">
+      <div className="grid gap-2">
+        <Button variant="ghost" onClick={() => handleSort("scoreh")}>Score (High to Low)</Button>
+        <Button variant="ghost" onClick={() => handleSort("scorel")}>Score (Low to High)</Button>
+        <Button variant="ghost" onClick={() => handleSort("date")}>Submitted (Newest)</Button>
+        <Button variant="ghost" onClick={() => handleSort("name")}>Student Name (A-Z)</Button>
+      </div>
+    </PopoverContent>
+  </Popover>
+
+  {/* Filter Popover */}
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button variant="outline" size="sm">
+        <SlidersHorizontal className="w-4 h-4 mr-1" />
+        Filter
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent className="w-52">
+      <div className="grid gap-2">
+        <Button variant="ghost" onClick={() => handleFilter("all")}>All</Button>
+        <Button variant="ghost" onClick={() => handleFilter("passed")}>Passed</Button>
+        <Button variant="ghost" onClick={() => handleFilter("failed")}>Failed</Button>
+        <Button variant="ghost" onClick={() => handleFilter("language:javascript")}>JavaScript</Button>
+        <Button variant="ghost" onClick={() => handleFilter("language:python")}>Python</Button>
+      </div>
+    </PopoverContent>
+  </Popover>
+</div>
+
+
             {isLoadingS ? (
               <div className="text-center py-8">
                 <p className="text-gray-500">No submissions yet</p>
@@ -253,7 +332,7 @@ const exportToPDF = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {submissions.map((submission) => (
+                  {sortedSubmissions.map((submission) => (
                     <TableRow key={submission.id}>
                       <TableCell className="font-medium">{submission.studentName}</TableCell>
                       <TableCell>{submission.studentId}</TableCell>
