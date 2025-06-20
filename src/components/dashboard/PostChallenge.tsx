@@ -109,7 +109,6 @@ const isValidTestCase = (tc: TestCase) => {
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
-  setLoading(true);
 
   if (formData.languages.length === 0) {
     toast.error("Missing language selection", {
@@ -172,6 +171,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   };
 
   try {
+  setLoading(true);
     const token = localStorage.getItem("token");
 
     const res = await axios.post(

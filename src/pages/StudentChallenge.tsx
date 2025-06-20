@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Code, Clock, Lightbulb, Send, CheckCircle, XCircle, Info, Loader2 } from "lucide-react";
+import { Code, Clock, Lightbulb, Send, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Lottie from "lottie-react";
 import animationData from "../assets/success.json"
@@ -56,6 +56,7 @@ const StudentChallenge = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [challengeKey, setChallengeKey] = useState('')
   const [loading, setLoading] = useState(false)
+  const [hint, setHint] = useState<string | null>(null);
 const {data: challenges, isLoading} = useChallenges()
 
   useEffect(() => {
@@ -150,23 +151,81 @@ const {data: challenges, isLoading} = useChallenges()
 };
 
 
-  const getHint = () => {
-    // Mock AI hint generation
-    const hints = [
-      "Try breaking down the problem into smaller steps",
-      "Consider using a loop to iterate through the data",
-      "Think about edge cases - what happens with empty inputs?",
-      "Look at the expected output format carefully",
-      "Consider the time complexity of your solution"
-    ];
-    const randomHint = hints[Math.floor(Math.random() * hints.length)];
-    
-  toast.info("Hint", {
-  description: <p className="text-gray-700">{randomHint}</p>,
-  icon: <Info className="text-blue-500" />,
-  duration: 3000,
-});
+  const getHint = async () => {
+  if (!challenge || !challenge.testCases?.length) {
+    toast.error("Hint Error", {
+      description: "Challenge data or test cases are missing.",
+      icon: <XCircle className="text-red-500" />,
+      duration: 3000,
+    });
+    return;
   }
+
+  setLoading(true);
+
+  const prompt = `You are an AI assistant helping students solve coding challenges.
+
+Based on the following problem description and test cases, generate exactly 3 helpful, concise, and relevant hints that would assist the student in understanding how to approach the problem. Do not solve the problem. Do not explain the hints. Only return the 3 hints in a numbered list.
+
+Problem Description:
+${challenge.description}
+
+Test Cases:
+${challenge.testCases
+    .map(
+      (tc, i) => `Test Case ${i + 1}:
+Input: ${tc.inputValue}
+Expected Output: ${tc.outputValue}`
+    )
+    .join("\n\n")}
+
+Only return the result in this format:
+1. ...
+2. ...
+3. ...`;
+
+  const options = {
+    method: "POST",
+    url: "https://open-ai32.p.rapidapi.com/conversationgpt35",
+    headers: {
+      "x-rapidapi-key": "ca1b249b7bmsh36fd72e9ca0bd25p1ba44djsnb30f488bd941",
+      "x-rapidapi-host": "open-ai32.p.rapidapi.com",
+      "Content-Type": "application/json",
+    },
+    data: {
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      web_access: false,
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    const resultText =
+      response.data?.result || response.data?.choices?.[0]?.message?.content;
+
+    if (!resultText || !resultText.trim()) {
+      throw new Error("No hint generated");
+    }
+
+    setHint(resultText.trim());
+  } catch (error) {
+    console.error("Hint generation error:", error);
+    toast.error("Hint Generation Failed", {
+      description: "Unable to fetch hints at the moment.",
+      icon: <XCircle className="text-red-500" />,
+      duration: 3000,
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -403,10 +462,29 @@ const {data: challenges, isLoading} = useChallenges()
 
 
 
-      <Button onClick={getHint} variant="outline" className="w-full">
+      {hint ? (
+  <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 rounded p-4 text-sm">
+    {hint.split("\n").map((line, i) => (
+      <p key={i} className="mb-1">{line}</p>
+    ))}
+  </div>
+) : (
+  <Button onClick={getHint} variant="outline" className="w-full" disabled={loading}>
+    {loading ? (
+      <>
+        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+        Getting Hint...
+      </>
+    ) : (
+      <>
         <Lightbulb className="h-4 w-4 mr-2" />
         Get Hint
-      </Button>
+      </>
+    )}
+  </Button>
+)}
+
+
     </div>
   </CardContent>
 </Card>
