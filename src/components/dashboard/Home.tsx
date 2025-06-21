@@ -202,7 +202,7 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 border border-gray-200">
+    <div className="bg-white rounded-3xl p-4 border border-gray-200">
       <h2 className="text-base md:text-lg font-medium text-gray-700 mb-3">
         {title}
       </h2>

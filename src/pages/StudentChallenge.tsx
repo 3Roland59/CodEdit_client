@@ -434,14 +434,14 @@ Only return the result in this format:
       {challenge.testCases.map((tc, index) => (
         <div
           key={index}
-          className="bg-gray-100 p-3 rounded border border-gray-200 text-sm"
+          className="bg-gray-100 p-3 rounded-3xl border border-gray-200 text-sm"
         >
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="font-medium text-gray-700">
                 Input <span className="text-gray-500 text-sm">({tc.inputDataType.replace(";", ", ")})</span>
               </p>
-              <code className="bg-white px-2 py-1 rounded block mt-1">
+              <code className="bg-white px-2 py-1 rounded-3xl block mt-1">
                 {tc.inputValue.replace(";", ", ")}
               </code>
             </div>
@@ -449,7 +449,7 @@ Only return the result in this format:
               <p className="font-medium text-gray-700">
                 Expected Output <span className="text-gray-500 text-sm">({tc.outputDataType.replace(";", ", ")})</span>
               </p>
-              <code className="bg-white px-2 py-1 rounded block mt-1">
+              <code className="bg-white px-2 py-1 rounded-3xl block mt-1">
                 {tc.outputValue.replace(";", ", ")}
               </code>
             </div>
@@ -463,7 +463,7 @@ Only return the result in this format:
 
 
       {hint ? (
-  <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 rounded p-4 text-sm">
+  <div className="bg-blue-50 border border-blue-300 text-blue-800 rounded-3xl p-4 text-sm">
     {hint.split("\n").map((line, i) => (
       <p key={i} className="mb-1">{line}</p>
     ))}

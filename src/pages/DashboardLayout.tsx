@@ -151,8 +151,8 @@ const cancelLogout = () => setConfirmLogoutOpen(false);
               'radial-gradient(closest-side at 50% 50%, #60a5fa, transparent 60%)',
           }}
         />
-        <div className="absolute right-[10%] top-[20%] h-96 w-96 rounded-full bg-indigo-400 opacity-20 blur-[100px] mix-blend-multiply" />
-        <div className="absolute left-[10%] bottom-[10%] h-96 w-96 rounded-full bg-blue-300 opacity-20 blur-[100px] mix-blend-multiply" />
+        <div className="absolute right-[10%] top-[20%] h-96 w-96 rounded-full bg-indigo-600 opacity-50 blur-[100px] mix-blend-multiply" />
+        <div className="absolute left-[10%] bottom-[10%] h-96 w-96 rounded-full bg-blue-500 opacity-50 blur-[100px] mix-blend-multiply" />
       </div>
       <Outlet />
     </main>

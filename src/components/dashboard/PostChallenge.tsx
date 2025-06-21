@@ -294,7 +294,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <Textarea
                   id="description"
                   placeholder="Provide a detailed description of the problem..."
-                  className="min-h-[120px]"
+                  className="min-h-[120px] rounded-3xl"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   required
