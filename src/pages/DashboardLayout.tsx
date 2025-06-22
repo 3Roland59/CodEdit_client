@@ -143,7 +143,7 @@ const cancelLogout = () => setConfirmLogoutOpen(false);
       {/* ✨ Nicer Background Blobs */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 overflow-hidden"
+        className="absolute inset-0 -z-10"
       >
         <div className="absolute left-[calc(50%-12rem)] top-[calc(50%-8rem)] h-[36rem] w-[72rem] -translate-x-1/2 -translate-y-1/2 rotate-45 transform-gpu opacity-30 blur-3xl"
           style={{

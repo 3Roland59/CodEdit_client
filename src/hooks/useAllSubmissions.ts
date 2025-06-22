@@ -34,6 +34,8 @@ const fetchAllSubmissions = async (): Promise<Submission[]> => {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log(data);
+  
   return data;
 };
 

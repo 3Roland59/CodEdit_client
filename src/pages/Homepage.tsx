@@ -70,7 +70,7 @@ function Homepage() {
       </Link>
 
       <Link to={"/auth?tab=login"} className="w-full sm:w-auto">
-        <button className="w-full sm:w-auto group flex items-center justify-center px-4 py-2 rounded-3xl border border-gray-400 font-semibold text-gray-700 transition hover:border-blue-500 hover:text-blue-600">
+        <button className="w-full cursor-pointer sm:w-auto group flex items-center justify-center px-4 py-2 rounded-3xl border hover:bg-blue-100 font-semibold transition border-blue-500 text-blue-600">
           Log In
           <ArrowRight className="ml-2 h-4 w-4 text-blue-600 transition-transform group-hover:translate-x-1" />
         </button>
