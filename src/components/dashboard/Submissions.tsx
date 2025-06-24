@@ -58,6 +58,8 @@ const Submissions = () => {
     const {data: subs, isLoading: isLoadingS} = useSubmissions(challengeId || '')
     const [filter, setFilter] = useState("all");
 const [sortBy, setSortBy] = useState("");
+const [sortOpen, setSortOpen] = useState(false);
+const [filterOpen, setFilterOpen] = useState(false);
 
 
 
@@ -163,10 +165,12 @@ const exportToPDF = () => {
 
   const handleFilter = (value: string) => {
   setFilter(value);
+  setFilterOpen(false);
 };
 
 const handleSort = (value: string) => {
   setSortBy(value);
+  setSortOpen(false);
 };
 
 const filteredSubmissions = submissions.filter((s) => {
@@ -269,7 +273,7 @@ if (sortBy === "scorel") {
           <CardContent>
             <div className="flex items-center justify-end mb-4 gap-3">
   {/* Sort Popover */}
-  <Popover>
+  <Popover open={sortOpen} onOpenChange={setSortOpen}>
     <PopoverTrigger asChild>
       <Button variant="outline" size="sm">
         <ArrowUpDown className="w-4 h-4 mr-1" />
@@ -287,7 +291,7 @@ if (sortBy === "scorel") {
   </Popover>
 
   {/* Filter Popover */}
-  <Popover>
+  <Popover open={filterOpen} onOpenChange={setFilterOpen}>
     <PopoverTrigger asChild>
       <Button variant="outline" size="sm">
         <SlidersHorizontal className="w-4 h-4 mr-1" />
