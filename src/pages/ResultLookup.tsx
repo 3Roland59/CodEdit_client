@@ -36,11 +36,11 @@ interface Submission {
   challengeId: string;
   code: string;
   language: string;
-  success: boolean;
-  score: number;
-  message: string;
-  testCaseResult: TestCaseResult[];
   createdAt: string;
+  success?: boolean;
+  score?: number;
+  message?: string;
+  testCaseResult?: TestCaseResult[];
 }
 
 const ResultLookup = () => {
@@ -133,7 +133,7 @@ const exportResultToPDF = () => {
   doc.text(`Submitted: ${formatDate(submission.createdAt)}`, 14, 48);
   doc.text(`Status: ${submission.success ? "Passed" : "Failed"}`, 14, 54);
   doc.text(
-    `Test Cases Passed: ${submission.testCaseResult.filter((t) => t.passed).length}/${submission.testCaseResult.length}`,
+    `Test Cases Passed: ${!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length/submission.testCaseResult?.length + " passed")}`,
     14,
     60
   );
@@ -141,14 +141,15 @@ const exportResultToPDF = () => {
   // Table of test case results
   autoTable(doc, {
     startY: 70,
-    head: [["#", "Input", "Expected", "Output", "Status", "Time"]],
-    body: submission.testCaseResult.map((t, index) => [
+    head: [["#", "Input", "Expected", "Output", "Status", "Time", "Error message"]],
+    body: submission.testCaseResult?.map((t, index) => [
       index + 1,
       t.input,
       t.expected,
       t.output,
       t.passed ? "Passed" : "Failed",
       t.executionTime,
+      t.errorMessage
     ]),
     theme: "grid",
     styles: { fontSize: 10 },
@@ -227,13 +228,14 @@ ${submission.code}
 
 Test Cases:
 ${submission.testCaseResult
-    .map(
+    ?.map(
       (t, i) => `Test Case ${i + 1}:
 Input: ${t.input}
 Expected: ${t.expected}
 Output: ${t.output}
 Passed: ${t.passed}
-Execution Time: ${t.executionTime}`
+Execution Time: ${t.executionTime}
+Error message: ${t.errorMessage}`
     )
     .join("\n\n")}
 
@@ -368,19 +370,21 @@ Provide detailed feedback on:
           {submission.studentName} ({submission.studentId})
         </CardTitle>
         <CardDescription className="flex items-center gap-2">
-          {submission.success ? (
-            <CheckCircle className="h-5 w-5 text-green-600" />
-          ) : (
-            <XCircle className="h-5 w-5 text-red-600" />
-          )}
+          {submission.success === true ? (
+  <CheckCircle className="h-5 w-5 text-green-600" />
+) : submission.success === false ? (
+  <XCircle className="h-5 w-5 text-red-600" />
+) : (
+  <Clock className="h-5 w-5 text-gray-400" />
+)}
           {challenge.title}
         </CardDescription>
       </div>
       <div className="text-right">
         <div className="text-2xl font-bold text-blue-500">{submission.score}%</div>
-        <Badge variant={submission.success ? "default" : "destructive"}>
-          {submission.success? "passed" : "failed"}
-        </Badge>
+        <Badge className={submission.success ? "bg-blue-600" : ""}  variant={submission.success==null? "secondary": submission.success ? "default" : "destructive"}>
+                      {submission.success==null? "pending": submission.success ? "passed" : "failed"}
+                    </Badge>
       </div>
     </div>
   </CardHeader>
@@ -402,7 +406,7 @@ Provide detailed feedback on:
       </div>
       <div>
         <span className="font-medium">Test Cases:</span>{" "}
-        {submission.testCaseResult.filter((t) => t.passed).length}/{submission.testCaseResult.length} passed
+        {!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length/submission.testCaseResult?.length + " passed")}
       </div>
     </div>
 
@@ -422,7 +426,11 @@ Provide detailed feedback on:
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {submission.testCaseResult.map((test, index) => (
+          {
+            !submission.testCaseResult?
+                      <div className="text-gray-400">Pending</div>
+                      :
+          submission.testCaseResult?.map((test, index) => (
             <div key={index} className="border rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">Test Case {index + 1}</span>
@@ -445,6 +453,9 @@ Provide detailed feedback on:
                 </div>
                 <div>
                   <span className="font-medium">Actual:</span> {test.output}
+                </div>
+                <div>
+                  <span className="font-medium">Error message:</span> {test.errorMessage}
                 </div>
               </div>
             </div>

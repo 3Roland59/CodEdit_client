@@ -61,10 +61,10 @@ const averageScoreData =
     ) || [];
 
     const avgScore =
-      relatedSubmissions.length > 0
-        ? relatedSubmissions.reduce((sum, s) => sum + s.score, 0) /
-          relatedSubmissions.length
-        : 0;
+  relatedSubmissions.length > 0
+    ? relatedSubmissions.reduce((sum, s) => sum + (s.score ?? 0), 0) /
+      relatedSubmissions.length
+    : 0;
 
     return {
       name: challenge.title,

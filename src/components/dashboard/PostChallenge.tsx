@@ -43,7 +43,7 @@ const PostChallenge = () => {
   const [showShareLink, setShowShareLink] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const languages = ["python", "javascript", "typescript"];
+  const languages = ["python", "javascript"];
   const dataTypes = ["string", "integer", "decimal", "boolean", "array",];
 
   const addTestCase = () => {

@@ -40,11 +40,11 @@ interface Submission {
   challengeId: string;
   code: string;
   language: string;
-  success: boolean;
-  score: number;
-  message: string;
-  testCaseResult: TestCaseResult[];
   createdAt: string;
+  success?: boolean;
+  score?: number;
+  message?: string;
+  testCaseResult?: TestCaseResult[];
 }
 
 const Submissions = () => {
@@ -102,7 +102,7 @@ const exportToPDF = () => {
       s.studentName,
       s.studentId,
       s.language,
-      s.success ? "Passed" : "Failed",
+      s.success==null? "Pending": s.success ? "Passed" : "Failed",
       `${s.score}%`,
       formatDate(s.createdAt),
     ]),
@@ -120,7 +120,7 @@ const exportToPDF = () => {
   const getStats = () => {
     const total = submissions?.length;
     const passed = submissions.filter(s => s.success === true).length;
-    const avgScore = total > 0 ? Math.round(submissions.reduce((sum, s) => sum + s.score, 0) / total) : 0;
+    const avgScore = total > 0 ? Math.round(submissions.reduce((sum, s) => sum + (s.score ?? 0), 0) / total) : 0;
     const languages = [...new Set(submissions.map(s => s.language))];
     
     return { total, passed, avgScore, languages };
@@ -181,8 +181,12 @@ const filteredSubmissions = submissions.filter((s) => {
 });
 
 const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
-  if (sortBy === "scoreh") return b.score - a.score;
-  if (sortBy === "scorel") return a.score - b.score;
+  if (sortBy === "scoreh") {
+  return (b.score === undefined ? -1 : a.score === undefined ? 1 : (b.score - a.score));
+}
+if (sortBy === "scorel") {
+  return (a.score === undefined ? 1 : b.score === undefined ? -1 : (a.score - b.score));
+}
   if (sortBy === "date") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   if (sortBy === "name") return a.studentName.localeCompare(b.studentName);
   return 0;
@@ -340,9 +344,9 @@ const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
                         <Badge variant="outline">{submission.language}</Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge className={submission.success ? "bg-blue-600" : ""} variant={submission.success ? "default" : "destructive"}>
-                          {submission.success? "passed" : "failed"}
-                        </Badge>
+                        <Badge className={submission.success ? "bg-blue-600" : ""}  variant={submission.success==null? "secondary": submission.success ? "default" : "destructive"}>
+                      {submission.success==null? "pending": submission.success ? "passed" : "failed"}
+                    </Badge>
                       </TableCell>
                       <TableCell className="font-medium">{submission.score}%</TableCell>
                       <TableCell>{formatDate(submission.createdAt)}</TableCell>
@@ -392,8 +396,8 @@ const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-gray-700">Status</div>
-                    <Badge className={selectedSubmission.success ? "bg-blue-600" : ""}  variant={selectedSubmission.success ? "default" : "destructive"}>
-                      {selectedSubmission.success? "passed" : "failed"}
+                    <Badge className={selectedSubmission.success ? "bg-blue-600" : ""}  variant={selectedSubmission.success==null? "secondary": selectedSubmission.success ? "default" : "destructive"}>
+                      {selectedSubmission.success==null? "pending": selectedSubmission.success ? "passed" : "failed"}
                     </Badge>
                   </div>
                   <div>
@@ -416,7 +420,11 @@ const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
                 <div>
                   <h3 className="font-medium mb-4">Test Case Results</h3>
                   <div className="space-y-3">
-                    {selectedSubmission.testCaseResult.map((test, index) => (
+                    {
+                      !selectedSubmission.testCaseResult?
+                      <div className="text-gray-400">Pending</div>
+                      :
+                    selectedSubmission.testCaseResult?.map((test, index) => (
                       <div key={index} className="border rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium">Test Case {index + 1}</span>
@@ -429,6 +437,7 @@ const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
                           <div><span className="font-medium">Expected:</span> {test.expected}</div>
                           <div><span className="font-medium">Actual:</span> {test.output}</div>
                           <div className="text-gray-600">Execution time: {test.executionTime}</div>
+                          <div className="text-gray-600">Error message: {test.errorMessage}</div>
                         </div>
                       </div>
                     ))}

@@ -2,7 +2,6 @@ import { BASE_URL } from "@/config/config";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-// Type Definitions
 interface TestCaseResult {
   id: string;
   input: string;
@@ -21,11 +20,11 @@ interface Submission {
   challengeId: string;
   code: string;
   language: string;
-  success: boolean;
-  score: number;
-  message: string;
-  testCaseResult: TestCaseResult[];
   createdAt: string;
+  success?: boolean;
+  score?: number;
+  message?: string;
+  testCaseResult?: TestCaseResult[];
 }
 
 const fetchSubmissions = async (challengeId: string): Promise<Submission[]> => {

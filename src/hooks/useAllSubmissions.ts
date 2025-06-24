@@ -20,12 +20,13 @@ interface Submission {
   challengeId: string;
   code: string;
   language: string;
-  success: boolean;
-  score: number;
-  message: string;
-  testCaseResult: TestCaseResult[];
   createdAt: string;
+  success?: boolean;
+  score?: number;
+  message?: string;
+  testCaseResult?: TestCaseResult[];
 }
+
 
 const fetchAllSubmissions = async (): Promise<Submission[]> => {
   const token = localStorage.getItem("token");
