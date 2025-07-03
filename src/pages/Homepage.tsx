@@ -25,7 +25,7 @@ function Homepage() {
       <section className="relative pt-32 sm:pt-40 overflow-hidden">
   {/* Background Glows */}
   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-0 pointer-events-none">
-  <div className="w-[700px] h-[700px] bg-blue-500 opacity-25 blur-[160px] rounded-full"></div>
+  <div className="w-[700px] h-[700px] hidden md:block bg-blue-500 opacity-25 blur-[160px] rounded-full"></div>
 </div>
 
 
