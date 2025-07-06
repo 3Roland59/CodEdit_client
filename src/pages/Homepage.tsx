@@ -23,10 +23,7 @@ function Homepage() {
       <div className="relative z-10">
         <Banner />
       <section className="relative pt-32 sm:pt-40 overflow-hidden">
-  {/* Background Glows */}
-  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-0 pointer-events-none">
-  <div className="w-[700px] h-[700px] bg-blue-500 opacity-25 blur-[160px] rounded-full"></div>
-</div>
+  
 
 
   {/* Content */}
@@ -48,7 +45,7 @@ function Homepage() {
       className="w-40 h-40 mx-auto mb-4 object-contain"
     />
 
-    <p className="text-lg sm:text-xl text-gray-600 mb-10 leading-relaxed animate-fade-in">
+    <p className="text-xl text-gray-600 mb-10 leading-relaxed animate-fade-in">
       A comprehensive platform for teachers to create coding challenges and students to solve them with AI-powered assistance.
     </p>
 
@@ -89,7 +86,7 @@ function Homepage() {
 </section>
 
 
-      <section className="py-16 bg-white text-center">
+      <section className="py-24 bg-white text-center">
       <div className="max-w-5xl mx-auto px-6">
         <h4 className="text-blue-600 font-semibold uppercase tracking-wide mb-2">
           Code easily
@@ -104,25 +101,25 @@ function Homepage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-left">
           {/* Feature 1 */}
           <div className="flex items-start gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
-              <CalendarClock className="w-6 h-6" />
+            <div className="p-3 rounded-lg text-blue-600">
+              <CalendarClock className="w-10 h-10" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">No-Hassle Sign-Up</h3>
-              <p className="text-gray-600">
-                Join in seconds. No setup, no credit card—just start coding with your CodEdit account.
+              <h3 className="text-xl font-semibold">No-Hassle Sign-Up</h3>
+              <p className="text-gray-600 text-lg">
+                Join in seconds. No setup, no credit card. Just start coding with your CodEdit account.
               </p>
             </div>
           </div>
 
           {/* Feature 2 */}
           <div className="flex items-start gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div className="p-3 rounded-lg text-blue-600">
+              <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Quick Access</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold">Quick Access</h3>
+              <p className="text-gray-600 text-lg">
                 Quickly access yourr coding sessions. Save time and skip the back-and-forth.
               </p>
             </div>
@@ -130,12 +127,12 @@ function Homepage() {
 
           {/* Feature 3 */}
           <div className="flex items-start gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
-              <Plug className="w-6 h-6" />
+            <div className="p-3 rounded-lg text-blue-600">
+              <Plug className="w-10 h-10" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Integrates Seamlessly</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold">Integrates Seamlessly</h3>
+              <p className="text-gray-600 text-lg">
                 Syncs with your academic activities. Works smoothly with your existing CodEdit academic workflow.
               </p>
             </div>
@@ -143,12 +140,12 @@ function Homepage() {
 
           {/* Feature 4 */}
           <div className="flex items-start gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
-              <MonitorSmartphone className="w-6 h-6" />
+            <div className="p-3 rounded-lg text-blue-600">
+              <MonitorSmartphone className="w-10 h-10" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Device Friendly</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold">Device Friendly</h3>
+              <p className="text-gray-600 text-lg">
                 Code from your laptop or mobile. CodEdit Scheduler works across all your devices.
               </p>
             </div>
@@ -157,7 +154,7 @@ function Homepage() {
       </div>
     </section>
 
-      <section className="py-20 bg-gradient-to-r from-blue-50/80 to-indigo-50/80">
+      <section className="py-20 bg-white">
   <div className="max-w-6xl mx-auto px-4">
 
     <h2 className="text-3xl sm:text-4xl font-bold text-center mb-16 text-gray-800">
@@ -173,8 +170,8 @@ function Homepage() {
       className="w-40 h-40 mx-auto mb-4 object-contain"
     />
         </div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-800">1. Create Challenge</h3>
-        <p className="text-gray-600 text-sm">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800">1. Create Challenge</h3>
+        <p className="text-gray-600 text-lg">
           Teachers design coding challenges with custom test cases and specific requirements.
         </p>
       </div>
@@ -188,8 +185,8 @@ function Homepage() {
       className="w-40 h-40 mx-auto mb-4 object-contain"
     />
         </div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-800">2. Students Solve</h3>
-        <p className="text-gray-600 text-sm">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800">2. Students Solve</h3>
+        <p className="text-gray-600 text-lg">
           Students access challenges via secure links and code their solutions directly.
         </p>
       </div>
@@ -203,8 +200,8 @@ function Homepage() {
       className="w-40 h-40 mx-auto mb-4 object-contain"
     />
         </div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-800">3. Get Results</h3>
-        <p className="text-gray-600 text-sm">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800">3. Get Results</h3>
+        <p className="text-gray-600 text-lg">
           Automatic grading provides feedback with detailed reports and AI-powered suggestions.
         </p>
       </div>
