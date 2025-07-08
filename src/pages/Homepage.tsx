@@ -26,7 +26,7 @@ function Homepage() {
 
 
   {/* Content */}
-  <div className="container mx-auto px-4 text-center max-w-4xl relative z-10">
+  <div className="container mx-auto px-4 text-center max-w-3xl relative z-10">
     <p className="p-2 text-xs font-semibold px-4 mx-auto rounded-full bg-blue-100 text-blue-600 mb-1 w-fit flex items-center justify-center gap-2">
       <WandSparkles size={14} /> Introducing CodEdit v1.0
     </p>
