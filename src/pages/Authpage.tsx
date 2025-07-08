@@ -132,7 +132,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         {/* Logo and Header */}
         <div className="flex flex-row items-center justify-center gap-4 mb-6">
           <img src={logo} alt="CodEdit Logo" className="w-12 h-12 object-contain" />
-          <h1 className="text-4xl sm:text-3xl font-extrabold text-blue-600 tracking-tight animate-fade-in">
+          <h1 className="text-4xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 tracking-tight animate-fade-in">
             CodEdit
           </h1>
         </div>

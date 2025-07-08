@@ -347,7 +347,7 @@ Provide detailed feedback on:
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <div className="flex flex-row items-center">
             <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-blue-600 font-bold text-2xl">CodEdit</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-2xl">CodEdit</span>
           </div>
             <Button onClick={() => setShowLookupModal(true)} variant="outline">
               <Search className="h-4 w-4 mr-2" />

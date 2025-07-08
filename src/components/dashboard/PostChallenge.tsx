@@ -376,7 +376,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             <CardHeader>
               <CardTitle>Test Cases</CardTitle>
               <CardDescription>
-                Define test cases that will validate student solutions
+                Define enough test cases that will validate student solutions. Only the first two will be visible to students
               </CardDescription>
               <CardDescription className="text-green-600">
                 *Data types allowed: string,array,integer,boolean,decimal

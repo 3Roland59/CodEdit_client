@@ -58,7 +58,7 @@ const cancelLogout = () => setConfirmLogoutOpen(false);
         <div className="p-6 flex items-center justify-between md:justify-start md:gap-3">
           <Link to={"/"} className="flex flex-row items-center">
             <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-blue-600 font-bold text-2xl">CodEdit</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-2xl">CodEdit</span>
           </Link>
           <button
             className="md:hidden text-gray-500"
@@ -151,8 +151,8 @@ const cancelLogout = () => setConfirmLogoutOpen(false);
               'radial-gradient(closest-side at 50% 50%, #60a5fa, transparent 60%)',
           }}
         />
-        <div className="absolute right-[10%] top-[20%] h-96 w-96 rounded-full bg-indigo-600 opacity-25 blur-[100px] mix-blend-multiply" />
-        <div className="absolute left-[10%] bottom-[10%] h-96 w-96 rounded-full bg-blue-500 opacity-25 blur-[100px] mix-blend-multiply" />
+        <div className="absolute right-[10%] top-[20%] h-96 w-96 rounded-full bg-green-600 opacity-10 blur-[100px] mix-blend-multiply" />
+        <div className="absolute left-[10%] bottom-[10%] h-96 w-96 rounded-full bg-blue-500 opacity-10 blur-[100px] mix-blend-multiply" />
       </div>
       <Outlet />
     </main>

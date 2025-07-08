@@ -17,7 +17,7 @@ function Homepage() {
   const {user} = useUser()
   return (
     <div className="relative min-h-dvh overflow-hidden bg-transparent">
-        <ParticlesBackground />
+        {/* <ParticlesBackground /> */}
 
       {/* Hero Section */}
       <div className="relative z-10">
@@ -34,7 +34,7 @@ function Homepage() {
 
     <div className="flex items-center justify-center gap-4 mb-6">
       <img src={logo} alt="CodEdit Logo" className="w-16 h-16 object-contain" />
-      <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight animate-fade-in">
+      <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 tracking-tight animate-fade-in">
         CodEdit
       </h1>
     </div>
@@ -58,7 +58,7 @@ function Homepage() {
         </button>
       </Link>
     </div>
-     : <div className="flex flex-col sm:flex-row justify-center items-center gap-4 px-4">
+     : <div className="flex flex-row justify-center items-center gap-4 px-4">
       <Link to={"/auth?tab=signup"} className="w-full sm:w-auto">
         <button className="w-full sm:w-auto cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-3xl border border-blue-600 font-semibold flex items-center justify-center gap-2 transition hover:bg-blue-700">
           Get Started

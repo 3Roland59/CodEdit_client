@@ -359,7 +359,7 @@ Only return the result in this format:
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <div className="flex flex-row items-center">
             <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-blue-600 font-bold text-2xl">CodEdit</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-2xl">CodEdit</span>
           </div>
             <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
     <SelectTrigger className="w-48 rounded-3xl">
@@ -404,7 +404,7 @@ Only return the result in this format:
     )}
   </CardHeader>
   <CardContent>
-    <div className="space-y-4">
+    <div className={`${showAuthModal&&"text-white"} space-y-4`}>
       {/* Problem Description */}
       <div>
         <h3 className="font-medium mb-2">Problem Description</h3>
@@ -431,7 +431,7 @@ Only return the result in this format:
   <div>
     <h3 className="font-medium mb-2">Test Cases</h3>
     <div className="space-y-2">
-      {challenge.testCases.map((tc, index) => (
+      {challenge.testCases.slice(0,2).map((tc, index) => (
         <div
           key={index}
           className="bg-gray-100 p-3 rounded-3xl border border-gray-200 text-sm"
