@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bolt,
   CheckCircle,
@@ -25,7 +25,7 @@ const navItems = [
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { logout } = useUser()
+  const { logout, user } = useUser()
   const [confirmLogoutOpen, setConfirmLogoutOpen] = useState(false);
 
 const confirmLogout = () => setConfirmLogoutOpen(true);
@@ -44,6 +44,13 @@ const cancelLogout = () => setConfirmLogoutOpen(false);
 
   navigate("/");
 };
+
+useEffect(()=>{
+  if(!user){
+    logout()
+    navigate("/")
+  }
+},[])
 
 
   return (
