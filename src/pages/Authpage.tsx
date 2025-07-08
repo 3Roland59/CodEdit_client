@@ -7,6 +7,7 @@ import { useUser } from "../context/UserContext";
 import { BASE_URL } from "@/config/config";
 import { toast } from "sonner";
 import { XCircle, CheckCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -126,9 +127,9 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <ParticlesBackground />
-      <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-3xl border border-gray-200">
+      <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-3xl">
         {/* Logo and Header */}
         <div className="flex flex-row items-center justify-center gap-4 mb-6">
           <img src={logo} alt="CodEdit Logo" className="w-12 h-12 object-contain" />
@@ -198,6 +199,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
             <Lock className="absolute left-3 top-[70%] transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="password"
+              placeholder="••••••"
               className="w-full pl-10 pr-4 py-2 rounded-3xl border"
               value={activeTab === "login" ? loginData.password : signupData.password}
               onChange={(e) =>
@@ -215,6 +217,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               <LockKeyhole className="absolute left-3 top-[70%] transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="password"
+              placeholder="••••••"
                 className="w-full pl-10 pr-4 py-2 rounded-3xl border"
                 value={signupData.confirmPassword}
                 onChange={(e) =>
@@ -224,6 +227,14 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               />
             </div>
           )}
+
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-2">
+            <Checkbox />
+            <label className="block text-sm text-gray-800">Remember me</label>
+            </div>
+            {activeTab !== "signup" && (<p className="block text-sm text-blue-600 cursor-pointer">Forgot password?</p>)}
+          </div>
 
           <button
             type="submit"
