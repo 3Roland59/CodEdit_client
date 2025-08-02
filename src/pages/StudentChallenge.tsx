@@ -25,6 +25,7 @@ interface TestCase {
   inputValue: string;
   outputDataType: string;
   outputValue: string;
+  hidden: boolean;
 }
 
 interface Challenge {
@@ -431,7 +432,7 @@ Only return the result in this format:
   <div>
     <h3 className="font-medium mb-2">Test Cases</h3>
     <div className="space-y-2">
-      {challenge.testCases.slice(0,2).map((tc, index) => (
+      {challenge.testCases.filter(i=> i.hidden==false).map((tc, index) => (
         <div
           key={index}
           className="bg-gray-100 p-3 rounded-3xl border border-gray-200 text-sm"

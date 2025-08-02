@@ -8,6 +8,7 @@ interface TestCase {
   inputValue: string;
   outputDataType: string;
   outputValue: string;
+  hidden: boolean;
 }
 
 interface Challenge {
