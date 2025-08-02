@@ -133,7 +133,7 @@ const exportResultToPDF = () => {
   doc.text(`Submitted: ${formatDate(submission.createdAt)}`, 14, 48);
   doc.text(`Status: ${submission.success ? "Passed" : "Failed"}`, 14, 54);
   doc.text(
-    `Test Cases Passed: ${!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length/submission.testCaseResult?.length + " passed")}`,
+    `Test Cases Passed: ${!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length+"/"+submission.testCaseResult?.length + " passed")}`,
     14,
     60
   );
@@ -406,7 +406,7 @@ Provide detailed feedback on:
       </div>
       <div>
         <span className="font-medium">Test Cases:</span>{" "}
-        {!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length/submission.testCaseResult?.length + " passed")}
+        {!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length+"/"+submission.testCaseResult?.length + " passed")}
       </div>
     </div>
 

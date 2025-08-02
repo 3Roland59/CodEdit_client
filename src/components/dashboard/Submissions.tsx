@@ -157,7 +157,7 @@ const exportToPDF = () => {
     const shareLink = `${window.location.origin}/results?challenge=${challengeId}`;
     navigator.clipboard.writeText(shareLink);
     toast.info("Link copied", {
-  description: <p className="text-gray-700">Challenge URL has been copied to your clipboard.</p>,
+  description: <p className="text-gray-700">Results URL has been copied to your clipboard.</p>,
   icon: <Info className="text-blue-500" />,
   duration: 3000,
 });
