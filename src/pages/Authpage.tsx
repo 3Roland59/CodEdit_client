@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import logo from "../assets/code.png";
+// import logo from "../assets/code.png";
 import ParticlesBackground from "../components/ParticlesBackground";
 import { Mail, Lock, User, LockKeyhole } from "lucide-react";
 import { useUser } from "../context/UserContext";
@@ -132,8 +132,8 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
       <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-3xl">
         {/* Logo and Header */}
         <div className="flex flex-row items-center justify-center gap-4 mb-6">
-          <img src={logo} alt="CodEdit Logo" className="w-12 h-12 object-contain" />
-          <h1 className="text-4xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 tracking-tight animate-fade-in">
+          {/* <img src={logo} alt="CodEdit Logo" className="w-12 h-12 object-contain" /> */}
+          <h1 className="text-5xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 tracking-tight animate-fade-in">
             CodEdit
           </h1>
         </div>

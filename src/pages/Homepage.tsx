@@ -32,8 +32,8 @@ function Homepage() {
     </p>
 
     <div className="flex items-center justify-center gap-4 mb-6">
-      <img src={logo} alt="CodEdit Logo" className="w-16 h-16 object-contain" />
-      <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 tracking-tight animate-fade-in">
+      {/* <img src={logo} alt="CodEdit Logo" className="w-16 h-16 object-contain" /> */}
+      <h1 className="text-5xl sm:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 tracking-tight animate-fade-in">
         CodEdit
       </h1>
     </div>
@@ -221,7 +221,7 @@ function Homepage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Teaching?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of educators who are already using CodeChallenger to enhance their programming courses
+            Join thousands of educators who are already using CodEdit to enhance their programming courses
           </p>
           <div className="flex justify-center gap-4">
             <Link to={"/auth?tab=signup"}>
@@ -242,9 +242,9 @@ function Homepage() {
             <img
               src={logo}
               alt="CodEdit Logo"
-              className="w-16 h-16 object-contain"
+              className="w-12 h-12 object-contain"
             />
-            <span className="text-lg font-semibold">CodEdit</span>
+            <span className="text-3xl font-semibold">CodEdit</span>
           </div>
           <p className="text-gray-400 animate-fade-in">
             Empowering education through interactive coding challenges

@@ -11,7 +11,7 @@ import {
   Search,
   X,
 } from "lucide-react";
-import logo from "../assets/code.png";
+// import logo from "../assets/code.png";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
@@ -64,8 +64,8 @@ useEffect(()=>{
       <div>
         <div className="p-6 flex items-center justify-between md:justify-start md:gap-3">
           <Link to={"/"} className="flex flex-row items-center">
-            <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-2xl">CodEdit</span>
+            {/* <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" /> */}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-3xl">CodEdit</span>
           </Link>
           <button
             className="md:hidden text-gray-500"
@@ -146,7 +146,7 @@ useEffect(()=>{
       </div>
     </header>
 
-    <main className="flex-1 relative isolate overflow-y-auto p-1 sm:p-4 bg-gray-50">
+    <main className="flex-1 relative isolate overflow-y-scroll overflow-x-hidden p-1 sm:p-4 bg-gray-50">
       {/* ✨ Nicer Background Blobs */}
       <div
         aria-hidden="true"
