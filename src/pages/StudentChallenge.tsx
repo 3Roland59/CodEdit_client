@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import Lottie from "lottie-react";
 import animationData from "../assets/success.json"
 import nf from "../assets/empty.png"
-import logo from "../assets/code.png"
+// import logo from "../assets/code.png"
 import Editor from "@monaco-editor/react";
 import { useChallenges } from "@/hooks/useChallenges";
 import { BASE_URL } from "@/config/config";
@@ -359,8 +359,8 @@ Only return the result in this format:
         <header className="bg-white border-b h-[70px]">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <div className="flex flex-row items-center">
-            <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-2xl">CodEdit</span>
+            {/* <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" /> */}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-3xl">CodEdit</span>
           </div>
             <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
     <SelectTrigger className="w-48 rounded-3xl">

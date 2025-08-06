@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, CheckCircle, XCircle, Clock, Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import nf from "../assets/empty.png"
-import logo from "../assets/code.png"
+// import logo from "../assets/code.png"
 import { useSearchParams } from "react-router";
 import { useChallenges } from "@/hooks/useChallenges";
 import axios from "axios";
@@ -346,8 +346,8 @@ Provide detailed feedback on:
         <header className="bg-white border-b">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <div className="flex flex-row items-center">
-            <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-2xl">CodEdit</span>
+            {/* <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" /> */}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-3xl">CodEdit</span>
           </div>
             <Button onClick={() => setShowLookupModal(true)} variant="outline">
               <Search className="h-4 w-4 mr-2" />
