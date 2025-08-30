@@ -14,9 +14,9 @@ import animationData from "../assets/success.json"
 import nf from "../assets/empty.png"
 // import logo from "../assets/code.png"
 import Editor from "@monaco-editor/react";
-import { useChallenges } from "@/hooks/useChallenges";
 import { BASE_URL } from "@/config/config";
 import axios from "axios";
+import { useChallenge } from "@/hooks/useChallenge";
 
 
 interface TestCase {
@@ -58,14 +58,13 @@ const StudentChallenge = () => {
   const [challengeKey, setChallengeKey] = useState('')
   const [loading, setLoading] = useState(false)
   const [hint, setHint] = useState<string | null>(null);
-const {data: challenges, isLoading} = useChallenges()
+const { data: fChallenge, isLoading } = useChallenge(id || "");
 
   useEffect(() => {
-    if (id) {
-      const foundChallenge = challenges?.find((c: Challenge) => c.id === id);
-      setChallenge(foundChallenge);
+    if (fChallenge) {
+      setChallenge(fChallenge);
     }
-  }, [id, isLoading]);
+  }, [fChallenge]);
 
   useEffect(() => {
     if (Number(challenge?.time) > 0 && timeLeft === null && !showAuthModal) {
