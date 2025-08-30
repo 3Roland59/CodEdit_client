@@ -57,6 +57,7 @@ const StudentChallenge = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [challengeKey, setChallengeKey] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loading1, setLoading1] = useState(false)
   const [hint, setHint] = useState<string | null>(null);
 const { data: fChallenge, isLoading } = useChallenge(id || "");
 
@@ -161,7 +162,7 @@ const { data: fChallenge, isLoading } = useChallenge(id || "");
     return;
   }
 
-  setLoading(true);
+  setLoading1(true);
 
   const prompt = `You are an AI assistant helping students solve coding challenges.
 
@@ -221,7 +222,7 @@ Only return the result in this format:
       duration: 3000,
     });
   } finally {
-    setLoading(false);
+    setLoading1(false);
   }
 };
 
@@ -469,8 +470,8 @@ Only return the result in this format:
     ))}
   </div>
 ) : (
-  <Button onClick={getHint} variant="outline" className="w-full" disabled={loading}>
-    {loading ? (
+  <Button onClick={getHint} variant="outline" className="w-full" disabled={loading1}>
+    {loading1 ? (
       <>
         <Loader2 className="h-4 w-4 animate-spin mr-2" />
         Getting Hint...
