@@ -19,8 +19,8 @@ import ConfirmDialog from "@/components/common/ConfirmDialog";
 
 const navItems = [
   { name: "Dashboard", to: "/dashboard/home", icon: Home },
-  { name: "Post Challenge", to: "/dashboard/post-challenge", icon: List },
-  { name: "My Challenges", to: "/dashboard/my-challenges", icon: Grid2X2Plus },
+  { name: "Post Challenge", to: "/dashboard/post-challenge", icon: Grid2X2Plus },
+  { name: "My Challenges", to: "/dashboard/my-challenges", icon: List },
 ];
 
 export default function DashboardLayout() {
