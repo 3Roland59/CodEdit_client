@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import logo from "../assets/code.png";
-import ParticlesBackground from "../components/ParticlesBackground";
 import { Mail, Lock, User, LockKeyhole, Sparkles, ArrowRight } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import { BASE_URL } from "@/config/config";
@@ -134,7 +133,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 flex items-center justify-center px-4 py-8 relative overflow-hidden">
-      <ParticlesBackground />
       
       {/* Animated Background Glows */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -184,7 +182,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
           </div>
 
           {/* Form - Using onSubmit handler directly */}
-          <div className="space-y-5 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+          <form onSubmit={handleSubmit} className="space-y-5 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
             {activeTab === "signup" && (
               <div className="relative group">
                 <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
@@ -198,14 +196,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
                     placeholder="John Doe"
                     value={signupData.name}
                     onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const form = e.currentTarget.closest('div')?.parentElement as HTMLElement;
-                        const button = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-                        button?.click();
-                      }
-                    }}
                   />
                 </div>
               </div>
@@ -228,14 +218,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
                       ? setLoginData({ ...loginData, email: e.target.value })
                       : setSignupData({ ...signupData, email: e.target.value })
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      const form = e.currentTarget.closest('div')?.parentElement as HTMLElement;
-                      const button = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-                      button?.click();
-                    }
-                  }}
                 />
               </div>
             </div>
@@ -257,14 +239,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
                       ? setLoginData({ ...loginData, password: e.target.value })
                       : setSignupData({ ...signupData, password: e.target.value })
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      const form = e.currentTarget.closest('div')?.parentElement as HTMLElement;
-                      const button = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-                      button?.click();
-                    }
-                  }}
                 />
               </div>
             </div>
@@ -284,14 +258,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
                     onChange={(e) =>
                       setSignupData({ ...signupData, confirmPassword: e.target.value })
                     }
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const form = e.currentTarget.closest('div')?.parentElement as HTMLElement;
-                        const button = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-                        button?.click();
-                      }
-                    }}
                   />
                 </div>
               </div>
@@ -301,12 +267,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
             <button
               type="submit"
               disabled={loading}
-              onClick={() => {
-                const fakeEvent = {
-                  preventDefault: () => {},
-                } as React.FormEvent<HTMLFormElement>;
-                handleSubmit(fakeEvent);
-              }}
               className="group w-full py-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white rounded-2xl transition-all duration-300 font-semibold text-base shadow-lg shadow-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/60 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] transform flex items-center justify-center gap-2 mt-8"
             >
               {loading ? (
@@ -325,7 +285,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
                 </>
               )}
             </button>
-          </div>
+          </form>
 
           {/* Footer Text */}
           <div className="mt-8 text-center text-sm text-gray-600 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
