@@ -147,20 +147,6 @@ useEffect(()=>{
     </header>
 
     <main className="flex-1 relative isolate overflow-y-scroll overflow-x-hidden p-1 sm:p-4 bg-gray-50">
-      {/* ✨ Nicer Background Blobs */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10"
-      >
-        <div className="absolute left-[calc(50%-12rem)] top-[calc(50%-8rem)] h-[36rem] w-[72rem] -translate-x-1/2 -translate-y-1/2 rotate-45 transform-gpu opacity-30 blur-3xl"
-          style={{
-            background:
-              'radial-gradient(closest-side at 50% 50%, #60a5fa, transparent 60%)',
-          }}
-        />
-        <div className="absolute right-[10%] top-[20%] h-96 w-96 rounded-full bg-green-600 opacity-10 blur-[100px] mix-blend-multiply" />
-        <div className="absolute left-[10%] bottom-[10%] h-96 w-96 rounded-full bg-blue-500 opacity-10 blur-[100px] mix-blend-multiply" />
-      </div>
       <Outlet />
     </main>
     <ConfirmDialog
