@@ -208,30 +208,13 @@ export default function PricingSection() {
             <p className="text-gray-700 mb-4">
               <span className="font-semibold text-indigo-600">Need a custom plan?</span> We offer tailored solutions for institutions and large organizations.
             </p>
-            <button className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
+            <a href="#contact-us" className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
               Contact Us for Enterprise Pricing
-            </button>
+            </a>
           </div>
         </div>
       </div>
 
-      <style>{`
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
-    </section>
+      </section>
   );
 }

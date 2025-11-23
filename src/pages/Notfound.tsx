@@ -71,7 +71,7 @@ export default function Notfound() {
           </a>
 
           <a
-            href="/contact-us"
+            href="#contact-us"
             className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white/80 backdrop-blur-sm border-2 border-indigo-200 hover:border-indigo-300 text-indigo-700 font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 transform hover:bg-white"
           >
             <LifeBuoy className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />

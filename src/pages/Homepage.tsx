@@ -13,6 +13,7 @@ import Support from "../components/home/Support"
 import { useUser } from "@/context/UserContext"
 import PricingSection from "@/components/home/PricingSection"
 import ParticlesBackground from "@/components/ParticlesBackground"
+import ContactSection from "@/components/home/ContactSection"
 
 function Homepage() {
   const {user} = useUser()
@@ -286,6 +287,8 @@ function Homepage() {
     </div>
   </div>
 </section>
+
+<ContactSection />
 
       {/* Footer */}
       <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-16 relative overflow-hidden">
