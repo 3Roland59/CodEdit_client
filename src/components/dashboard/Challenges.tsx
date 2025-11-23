@@ -41,7 +41,7 @@ const Challenges = () => {
     );
   }
 
-  if (challenges?.length == 0 || !challenges) {
+  if (challenges?.length == 0 || challenges) {
     return (
       <div className="max-w-4xl mx-auto p-4 sm:p-6">
         {/* Header */}
@@ -62,7 +62,6 @@ const Challenges = () => {
           <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-3xl opacity-10 blur-xl group-hover:opacity-20 transition-opacity"></div>
           
           <Card className="relative border-2 border-gray-100 hover:border-blue-200 transition-all shadow-lg hover:shadow-xl rounded-3xl overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
             
             <CardContent className="text-center py-16">
               <div className="relative inline-block mb-6">
@@ -148,7 +147,7 @@ const Challenges = () => {
           >
             <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
             
-            <Card className="relative border-2 border-gray-100 hover:border-indigo-200 transition-all duration-300 shadow-md hover:shadow-2xl hover:-translate-y-1 transform rounded-3xl overflow-hidden">
+            <Card className="relative border-2 border-gray-100 hover:border-indigo-200 transition-all duration-300  rounded-3xl overflow-hidden">
               {/* Gradient Top Bar */}
               
               <CardHeader className="pb-4">

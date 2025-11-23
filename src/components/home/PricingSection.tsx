@@ -1,4 +1,4 @@
-import { Check, Sparkles, Zap, Crown, Rocket, Users, Code2, ArrowRight } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, Users, Code2, ArrowRight } from "lucide-react";
 
 export default function PricingSection() {
 
