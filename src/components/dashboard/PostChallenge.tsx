@@ -20,6 +20,7 @@ interface TestCase {
   inputValue: string;
   outputDataType: string;
   outputValue: string;
+  hidden: boolean;
 }
 
 const PostChallenge = () => {
@@ -37,7 +38,7 @@ const PostChallenge = () => {
   });
 
   const [testCases, setTestCases] = useState<TestCase[]>([
-    { id: "1", inputDataType: "", inputValue: "", outputDataType: "", outputValue: "" }
+    { id: "1", inputDataType: "", inputValue: "", outputDataType: "", outputValue: "", hidden: false }
   ]);
 
   const [showShareLink, setShowShareLink] = useState("");
@@ -52,7 +53,8 @@ const PostChallenge = () => {
       inputDataType: "string",
       inputValue: "",
       outputDataType: "string",
-      outputValue: ""
+      outputValue: "",
+      hidden: false,
     };
     setTestCases([...testCases, newTestCase]);
   };
@@ -63,7 +65,7 @@ const PostChallenge = () => {
     }
   };
 
-  const updateTestCase = (id: string, field: keyof TestCase, value: string) => {
+  const updateTestCase = (id: string, field: keyof TestCase, value: string | boolean) => {
     setTestCases(testCases.map(tc => 
       tc.id === id ? { ...tc, [field]: value } : tc
     ));
@@ -127,7 +129,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     toast.error("Invalid Test Case", {
       description: (
         <p className="text-gray-700">
-          Make sure each test case has valid, comma-separated types and values.
+          Make sure each test case has valid, semicolon-separated types and values.
           <br />
           Valid types: <code>{dataTypes.join(", ")}</code>
         </p>
@@ -376,7 +378,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             <CardHeader>
               <CardTitle>Test Cases</CardTitle>
               <CardDescription>
-                Define test cases that will validate student solutions
+                Define enough test cases that will validate student solutions.
               </CardDescription>
               <CardDescription className="text-green-600">
                 *Data types allowed: string,array,integer,boolean,decimal
@@ -442,6 +444,18 @@ const handleSubmit = async (e: React.FormEvent) => {
                         onChange={(e) => updateTestCase(testCase.id, "outputValue", e.target.value)}
                       />
                     </div>
+
+                    <div className="flex items-center space-x-2 pt-2">
+  <Checkbox
+    id={`hidden-${testCase.id}`}
+    checked={testCase.hidden || false}
+    onCheckedChange={(checked) =>
+      updateTestCase(testCase.id, "hidden", checked as boolean)
+    }
+  />
+  <Label htmlFor={`hidden-${testCase.id}`}>Hidden from students</Label>
+</div>
+
                   </div>
                 </Card>
               ))}

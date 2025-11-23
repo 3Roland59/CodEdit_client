@@ -8,11 +8,11 @@ import solve from "../assets/solve.png"
 import add from "../assets/add.png"
 import mark from "../assets/mark.png"
 import snap from "../assets/snap.jpeg"
-import ParticlesBackground from "../components/ParticlesBackground"
 import Banner from "../components/home/Banner"
 import Support from "../components/home/Support"
 import { useUser } from "@/context/UserContext"
 import PricingSection from "@/components/home/PricingSection"
+import ParticlesBackground from "@/components/ParticlesBackground"
 
 function Homepage() {
   const {user} = useUser()
@@ -21,6 +21,7 @@ function Homepage() {
   return (
     <div className="relative min-h-dvh overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
         <ParticlesBackground />
+
 
       {/* Hero Section */}
       <div className="relative z-10">
@@ -49,6 +50,7 @@ function Homepage() {
         <img src={logo} alt="CodEdit Logo" className="relative w-16 h-16 object-contain drop-shadow-2xl" />
       </div>
       <h1 className="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent tracking-tight">
+
         CodEdit
       </h1>
     </div>
@@ -64,6 +66,7 @@ function Homepage() {
 
     <p className="text-lg sm:text-xl text-gray-700 mb-10 leading-relaxed max-w-2xl mx-auto animate-fade-in-up font-medium" style={{animationDelay: '0.4s'}}>
       A comprehensive platform for teachers to create coding challenges and students to solve them with <span className="text-blue-600 font-semibold">AI-powered assistance</span>.
+
     </p>
 
     {user ?
@@ -78,6 +81,7 @@ function Homepage() {
      : <div className="flex flex-col sm:flex-row justify-center items-center gap-4 px-4 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
       <Link to={"/auth?tab=signup"} className="w-full sm:w-auto group">
         <button className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-full font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 hover:scale-105 transform">
+
           Get Started
           <Sparkles size={16} className="group-hover:rotate-12 transition-transform" />
         </button>
@@ -146,6 +150,7 @@ function Homepage() {
                 </div>
               </div>
             ))}
+
           </div>
         </div>
 
@@ -170,6 +175,7 @@ function Homepage() {
                 </div>
               </div>
             ))}
+
           </div>
         </div>
       </div>
@@ -244,6 +250,7 @@ function Homepage() {
         </h2>
         <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{animationDelay: '0.1s'}}>
           Join thousands of educators who are already using CodEdit to enhance their programming courses
+
         </p>
         
         <div className="flex flex-wrap justify-center gap-4 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
@@ -274,6 +281,7 @@ function Homepage() {
             </div>
           ))}
         </div>
+
       </div>
     </div>
   </div>
@@ -293,6 +301,7 @@ function Homepage() {
               <img src={logo1} alt="CodEdit Logo" className="relative size-10 object-contain drop-shadow-2xl transform group-hover:scale-110 transition-transform" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">CodEdit</span>
+
           </div>
           <p className="text-gray-400 text-lg mb-8">
             Empowering education through interactive coding challenges

@@ -24,21 +24,17 @@ interface Challenge {
   testCases: TestCase[];
 }
 
-const fetchChallenges = async (): Promise<Challenge[]> => {
-  const token = localStorage.getItem("token");
-  const { data } = await axios.get(BASE_URL+"/api/v1/challenges/user", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const fetchChallenge = async (id:string): Promise<Challenge> => {
+  const { data } = await axios.get(BASE_URL+"/api/v1/challenges/"+id);
   return data;
 };
 
-export const useChallenges = () => {
-  return useQuery<Challenge[], Error>({
-    queryKey: ["challenges"],
-    queryFn: fetchChallenges,
+export const useChallenge = (id: string) => {
+  return useQuery<Challenge, Error>({
+    queryKey: ["challenge", id],
+    queryFn: () => fetchChallenge(id),
     staleTime: 0,
     retry: 1,
   });
 };
+

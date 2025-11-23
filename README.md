@@ -52,3 +52,6 @@ export default tseslint.config({
   },
 })
 ```
+
+https://3dicons.co/explore
+https://iconscout.com/lottie-animations/loading?price=free

@@ -12,11 +12,11 @@ import { toast } from "sonner";
 import Lottie from "lottie-react";
 import animationData from "../assets/success.json"
 import nf from "../assets/empty.png"
-import logo from "../assets/code.png"
+// import logo from "../assets/code.png"
 import Editor from "@monaco-editor/react";
-import { useChallenges } from "@/hooks/useChallenges";
 import { BASE_URL } from "@/config/config";
 import axios from "axios";
+import { useChallenge } from "@/hooks/useChallenge";
 
 
 interface TestCase {
@@ -25,6 +25,7 @@ interface TestCase {
   inputValue: string;
   outputDataType: string;
   outputValue: string;
+  hidden: boolean;
 }
 
 interface Challenge {
@@ -56,15 +57,15 @@ const StudentChallenge = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [challengeKey, setChallengeKey] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loading1, setLoading1] = useState(false)
   const [hint, setHint] = useState<string | null>(null);
-const {data: challenges, isLoading} = useChallenges()
+const { data: fChallenge, isLoading } = useChallenge(id || "");
 
   useEffect(() => {
-    if (id) {
-      const foundChallenge = challenges?.find((c: Challenge) => c.id === id);
-      setChallenge(foundChallenge);
+    if (fChallenge) {
+      setChallenge(fChallenge);
     }
-  }, [id, isLoading]);
+  }, [fChallenge]);
 
   useEffect(() => {
     if (Number(challenge?.time) > 0 && timeLeft === null && !showAuthModal) {
@@ -161,7 +162,7 @@ const {data: challenges, isLoading} = useChallenges()
     return;
   }
 
-  setLoading(true);
+  setLoading1(true);
 
   const prompt = `You are an AI assistant helping students solve coding challenges.
 
@@ -221,7 +222,7 @@ Only return the result in this format:
       duration: 3000,
     });
   } finally {
-    setLoading(false);
+    setLoading1(false);
   }
 };
 
@@ -358,8 +359,8 @@ Only return the result in this format:
         <header className="bg-white border-b h-[70px]">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <div className="flex flex-row items-center">
-            <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-blue-600 font-bold text-2xl">CodEdit</span>
+            {/* <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" /> */}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-3xl">CodEdit</span>
           </div>
             <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
     <SelectTrigger className="w-48 rounded-3xl">
@@ -404,7 +405,7 @@ Only return the result in this format:
     )}
   </CardHeader>
   <CardContent>
-    <div className="space-y-4">
+    <div className={`${showAuthModal&&"text-white"} space-y-4`}>
       {/* Problem Description */}
       <div>
         <h3 className="font-medium mb-2">Problem Description</h3>
@@ -431,7 +432,7 @@ Only return the result in this format:
   <div>
     <h3 className="font-medium mb-2">Test Cases</h3>
     <div className="space-y-2">
-      {challenge.testCases.map((tc, index) => (
+      {challenge.testCases.filter(i=> i.hidden==false).map((tc, index) => (
         <div
           key={index}
           className="bg-gray-100 p-3 rounded-3xl border border-gray-200 text-sm"
@@ -469,8 +470,8 @@ Only return the result in this format:
     ))}
   </div>
 ) : (
-  <Button onClick={getHint} variant="outline" className="w-full" disabled={loading}>
-    {loading ? (
+  <Button onClick={getHint} variant="outline" className="w-full" disabled={loading1}>
+    {loading1 ? (
       <>
         <Loader2 className="h-4 w-4 animate-spin mr-2" />
         Getting Hint...

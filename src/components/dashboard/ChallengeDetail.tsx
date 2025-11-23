@@ -160,7 +160,7 @@ const ChallengeDetail = () => {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <h3 className="font-medium mb-2">Supported Languages</h3>
+                <h3 className="font-medium mb-2">Allowed Languages</h3>
                 <div className="flex flex-wrap gap-2">
                   {challenge.languages.split(",").map((language) => (
                     <Badge key={language} variant="secondary">

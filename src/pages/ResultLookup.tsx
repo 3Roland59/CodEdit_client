@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, CheckCircle, XCircle, Clock, Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import nf from "../assets/empty.png"
-import logo from "../assets/code.png"
+// import logo from "../assets/code.png"
 import { useSearchParams } from "react-router";
 import { useChallenges } from "@/hooks/useChallenges";
 import axios from "axios";
@@ -133,7 +133,7 @@ const exportResultToPDF = () => {
   doc.text(`Submitted: ${formatDate(submission.createdAt)}`, 14, 48);
   doc.text(`Status: ${submission.success ? "Passed" : "Failed"}`, 14, 54);
   doc.text(
-    `Test Cases Passed: ${!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length/submission.testCaseResult?.length + " passed")}`,
+    `Test Cases Passed: ${!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length+"/"+submission.testCaseResult?.length + " passed")}`,
     14,
     60
   );
@@ -346,8 +346,8 @@ Provide detailed feedback on:
         <header className="bg-white border-b">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <div className="flex flex-row items-center">
-            <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" />
-            <span className="text-blue-600 font-bold text-2xl">CodEdit</span>
+            {/* <img src={logo} alt="CodEdit Logo" className="w-10 h-10 object-contain" /> */}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500 font-bold text-3xl">CodEdit</span>
           </div>
             <Button onClick={() => setShowLookupModal(true)} variant="outline">
               <Search className="h-4 w-4 mr-2" />
@@ -406,7 +406,7 @@ Provide detailed feedback on:
       </div>
       <div>
         <span className="font-medium">Test Cases:</span>{" "}
-        {!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length/submission.testCaseResult?.length + " passed")}
+        {!submission.testCaseResult? "pending" : (submission.testCaseResult?.filter((t) => t.passed).length+"/"+submission.testCaseResult?.length + " passed")}
       </div>
     </div>
 

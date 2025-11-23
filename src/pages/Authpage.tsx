@@ -326,7 +326,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
           <p>Your data is protected with industry-standard security</p>
         </div>
       </div>
-
       </div>
   );
 };
