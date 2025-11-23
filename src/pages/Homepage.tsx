@@ -12,6 +12,7 @@ import ParticlesBackground from "../components/ParticlesBackground"
 import Banner from "../components/home/Banner"
 import Support from "../components/home/Support"
 import { useUser } from "@/context/UserContext"
+import PricingSection from "@/components/home/PricingSection"
 
 function Homepage() {
   const {user} = useUser()
@@ -105,7 +106,7 @@ function Homepage() {
 </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-white/50 backdrop-blur-sm text-center relative overflow-hidden">
+      <section id="features" className="py-24 bg-white/50 backdrop-blur-sm text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/30 to-transparent pointer-events-none"></div>
         
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -218,6 +219,8 @@ function Homepage() {
   </div>
 </section>
 
+<PricingSection />
+
 <Support />
 
 {/* CTA Section */}
@@ -287,7 +290,7 @@ function Homepage() {
           <div className="flex items-center justify-center gap-3 mb-6 group">
             <div className="relative">
               <div className="absolute inset-0 bg-blue-500 opacity-50 blur-xl rounded-full group-hover:opacity-70 transition-opacity"></div>
-              <img src={logo1} alt="CodEdit Logo" className="relative w-20 h-20 object-contain drop-shadow-2xl transform group-hover:scale-110 transition-transform" />
+              <img src={logo1} alt="CodEdit Logo" className="relative size-10 object-contain drop-shadow-2xl transform group-hover:scale-110 transition-transform" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">CodEdit</span>
           </div>
@@ -296,9 +299,9 @@ function Homepage() {
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
-            {[ 'Features', 'Pricing'].map((item, i) => (
-              <a key={i} href="#" className="hover:text-white transition-colors hover:underline underline-offset-4">
-                {item}
+            {[{name: "Features", to: "#features"}, {name: "Pricing", to: "#pricing"}].map((item, i) => (
+              <a key={i} href={item.to} className="hover:text-white transition-colors hover:underline underline-offset-4">
+                {item.name}
               </a>
             ))}
           </div>
