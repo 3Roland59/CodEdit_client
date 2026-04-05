@@ -11,7 +11,7 @@ import Banner from "../components/home/Banner"
 import Support from "../components/home/Support"
 import { useUser } from "@/context/UserContext"
 import PricingSection from "@/components/home/PricingSection"
-import ParticlesBackground from "@/components/ParticlesBackground"
+// import ParticlesBackground from "@/components/ParticlesBackground"
 import ContactSection from "@/components/home/ContactSection"
 
 function Homepage() {
