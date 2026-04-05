@@ -20,7 +20,7 @@ function Homepage() {
 
   return (
     <div className="relative min-h-dvh overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
-      <ParticlesBackground />
+      {/* <ParticlesBackground /> */}
 
 
       {/* Hero Section */}
