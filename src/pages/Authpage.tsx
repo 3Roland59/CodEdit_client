@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import logo from "../assets/code.png";
-import { Mail, Lock, User, LockKeyhole, Sparkles, ArrowRight } from "lucide-react";
+import { Mail, Lock, User, LockKeyhole, ArrowRight } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import { BASE_URL } from "@/config/config";
 import { toast } from "sonner";
@@ -132,67 +132,64 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 flex items-center justify-center px-4 py-8 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12 relative overflow-hidden">
       
-      {/* Animated Background Glows */}
+      {/* Subtle Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-400 opacity-20 blur-[120px] rounded-full animate-pulse"></div>
-        <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-indigo-400 opacity-20 blur-[120px] rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-300 opacity-10 blur-[150px] rounded-full"></div>
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full"></div>
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/10 blur-[120px] rounded-full"></div>
       </div>
 
-      {/* Auth Card */}
+      {/* Auth Container */}
       <div className="relative z-10 w-full max-w-md">
-        {/* Glow effect behind card */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-3xl opacity-20 blur-2xl"></div>
-        
-        <div className="relative bg-white/90 backdrop-blur-xl p-8 sm:p-10 rounded-3xl border border-white/50 shadow-2xl">
-          {/* Logo and Header */}
-          <div className="text-center mb-8 animate-fade-in-up">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-blue-500 opacity-30 blur-xl rounded-full animate-pulse"></div>
-                <img src={logo} alt="CodEdit Logo" className="relative w-14 h-14 object-contain drop-shadow-lg" />
-              </div>
-              <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent tracking-tight">
-                CodEdit
-              </h1>
+        <div className="text-center mb-10 animate-fade-in-up">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full"></div>
+              <img src={logo} alt="CodEdit Logo" className="relative w-12 h-12 object-contain" />
             </div>
-            <p className="text-gray-600 text-sm">
-              {activeTab === "login" ? "Welcome back! Sign in to continue" : "Create your account to get started"}
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">CodEdit</h1>
+          </div>
+        </div>
+
+        <div className="glass-card p-10 rounded-[2.5rem] shadow-2xl animate-fade-in-up" style={{animationDelay: '0.1s'}}>
+          <div className="mb-8">
+            <h2 className="text-2xl font-black text-slate-900 mb-2">
+              {activeTab === "login" ? "Welcome back" : "Create account"}
+            </h2>
+            <p className="text-slate-500 font-medium">
+              {activeTab === "login" ? "Enter your credentials to access your account" : "Join our community of teachers and students"}
             </p>
           </div>
 
           {/* Tabs */}
-          <div className="flex bg-gradient-to-r from-gray-100 to-gray-50 rounded-full p-1.5 mb-8 shadow-inner animate-fade-in-up" style={{animationDelay: '0.1s'}}>
+          <div className="flex bg-slate-100/50 p-1 rounded-2xl mb-8">
             {["login", "signup"].map((tab) => (
               <button
                 key={tab}
                 type="button"
-                className={`w-1/2 py-2 text-sm font-semibold rounded-full transition-all duration-300 transform ${
+                className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 ${
                   activeTab === tab
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg scale-105"
-                    : "text-gray-600 hover:text-indigo-600 hover:bg-white/50"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
                 }`}
                 onClick={() => setActiveTab(tab as "login" | "signup")}
               >
-                {tab === "login" ? "Login" : "Sign Up"}
+                {tab === "login" ? "Sign In" : "Register"}
               </button>
             ))}
           </div>
 
-          {/* Form - Using onSubmit handler directly */}
-          <form onSubmit={handleSubmit} className="space-y-5 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+          <form onSubmit={handleSubmit} className="space-y-5">
             {activeTab === "signup" && (
-              <div className="relative group">
-                <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
-                  Full Name
-                </label>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
                 <div className="relative">
-                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
                     type="text"
-                    className="w-full pl-12 pr-4 py-2 rounded-2xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all font-medium"
                     placeholder="John Doe"
                     value={signupData.name}
                     onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
@@ -201,17 +198,15 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               </div>
             )}
 
-            {/* Email */}
-            <div className="relative group">
-              <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
-                Email Address
-              </label>
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
                   type="email"
-                  className="w-full pl-12 pr-4 py-2 rounded-2xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-white/50 backdrop-blur-sm hover:border-gray-300"
-                  placeholder="teacher@school.edu"
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all font-medium"
+                  placeholder="name@example.com"
                   value={activeTab === "login" ? loginData.email : signupData.email}
                   onChange={(e) =>
                     activeTab === "login"
@@ -222,16 +217,21 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               </div>
             </div>
 
-            {/* Password */}
-            <div className="relative group">
-              <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
-                Password
-              </label>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between ml-1">
+                <label className="text-sm font-bold text-slate-700">Password</label>
+                {activeTab === "login" && (
+                  <button type="button" className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+                    Forgot password?
+                  </button>
+                )}
+              </div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
                   type="password"
-                  className="w-full pl-12 pr-4 py-2 rounded-2xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all font-medium"
                   placeholder="••••••••"
                   value={activeTab === "login" ? loginData.password : signupData.password}
                   onChange={(e) =>
@@ -244,15 +244,14 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
             </div>
 
             {activeTab === "signup" && (
-              <div className="relative group">
-                <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
-                  Confirm Password
-                </label>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">Confirm Password</label>
                 <div className="relative">
-                  <LockKeyhole className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-indigo-500 transition-colors" />
+                  <LockKeyhole className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
                     type="password"
-                    className="w-full pl-12 pr-4 py-2 rounded-2xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all font-medium"
                     placeholder="••••••••"
                     value={signupData.confirmPassword}
                     onChange={(e) =>
@@ -263,70 +262,46 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               </div>
             )}
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="group w-full py-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white rounded-2xl transition-all duration-300 font-semibold text-base shadow-lg shadow-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/60 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] transform flex items-center justify-center gap-2 mt-8"
+              className="btn-premium w-full py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-3 mt-8 disabled:opacity-50"
             >
               {loading ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Please wait...</span>
-                </>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
               ) : (
                 <>
                   <span>{activeTab === "login" ? "Sign In" : "Create Account"}</span>
-                  {activeTab === "login" ? (
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  ) : (
-                    <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                  )}
+                  <ArrowRight size={18} />
                 </>
               )}
             </button>
           </form>
 
-          {/* Footer Text */}
-          <div className="mt-8 text-center text-sm text-gray-600 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+          <p className="mt-8 text-center text-sm font-medium text-slate-500">
             {activeTab === "login" ? (
-              <p>
+              <>
                 Don't have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("signup")}
-                  className="text-indigo-600 font-semibold hover:text-indigo-700 hover:underline underline-offset-2 transition-colors"
-                >
-                  Sign up
-                </button>
-              </p>
+                <button type="button" onClick={() => setActiveTab("signup")} className="text-blue-600 font-bold hover:underline transition-all">Sign up</button>
+              </>
             ) : (
-              <p>
+              <>
                 Already have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("login")}
-                  className="text-indigo-600 font-semibold hover:text-indigo-700 hover:underline underline-offset-2 transition-colors"
-                >
-                  Log in
-                </button>
-              </p>
+                <button type="button" onClick={() => setActiveTab("login")} className="text-blue-600 font-bold hover:underline transition-all">Log in</button>
+              </>
             )}
-          </div>
+          </p>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="mt-8 text-center text-xs text-gray-500 space-y-2 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-          <p className="flex items-center justify-center gap-2">
-            <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-            </svg>
-            <span>Secure & Encrypted</span>
-          </p>
-          <p>Your data is protected with industry-standard security</p>
+        {/* Security Badge */}
+        <div className="mt-10 flex items-center justify-center gap-2 text-slate-400 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+          </svg>
+          <span className="text-xs font-bold uppercase tracking-widest">Secure AES-256 Encryption</span>
         </div>
       </div>
-      </div>
+    </div>
   );
 };
 

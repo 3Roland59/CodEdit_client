@@ -26,14 +26,14 @@ export default function Banner() {
       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-800">
         <Sparkles className="text-blue-600 w-5 h-5" />
         <span className="font-medium">
-          <strong className="text-blue-700">CodEdit v1.0</strong> is now live — Empower your coding classrooms today!
+          <strong className="text-blue-700">CodEdit v1.0</strong> is now live - Empower your coding classrooms today!
           <Link to={"/auth?tab=signup"}
-          className="inline-flex ml-4 items-center rounded-full bg-blue-600 px-3 py-1 text-white font-medium text-sm shadow-sm transition hover:bg-blue-700"
-        >
-          Try Now →
-        </Link>
+            className="inline-flex ml-4 items-center rounded-full bg-blue-600 px-3 py-1 text-white font-medium text-sm shadow-sm transition hover:bg-blue-700"
+          >
+            Try Now
+          </Link>
         </span>
-        
+
       </div>
 
       {/* Dismiss Button */}
